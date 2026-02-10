@@ -27,8 +27,6 @@ html, body {
     cursor: pointer;
 }
 
-#lobby.hallway { background-size: cover; }
-
 /* Flicker + scanlines */
 .flicker { animation: flicker 0.15s infinite alternate; }
 @keyframes flicker { from { opacity:0.98; } to { opacity:1; } }
@@ -140,7 +138,7 @@ iframe {
 
 /* BACK BUTTON */
 #mobile-back {
-    display:none;
+    display:none; /* HIDDEN BY DEFAULT */
     position:fixed;
     bottom:20px;
     left:20px;
@@ -151,9 +149,6 @@ iframe {
     font-size:18px;
     padding:10px 14px;
     cursor:pointer;
-}
-@media(max-width:768px){
-    #mobile-back { display:block; }
 }
 </style>
 </head>
@@ -265,7 +260,6 @@ terminalClose.onclick = ()=>{
     terminal.style.display="none";
     passwordInput.value="";
     inTerminal=false;
-    // No back button for terminal
 };
 
 // Password
