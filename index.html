@@ -17,7 +17,7 @@ html, body {
     touch-action: manipulation;
 }
 
-/* ===== LOBBY ===== */
+/* LOBBY */
 #lobby {
     position: absolute;
     inset: 0;
@@ -45,11 +45,6 @@ html, body {
         transparent 4px
     );
     pointer-events:none;
-}
-
-/* HOTSPOTS */
-#computer-hotspot, #diary-hotspot {
-    display:none;
 }
 
 /* TERMINAL */
@@ -126,20 +121,16 @@ html, body {
 .desktop-icon .icon { font-size:48px; }
 .desktop-icon .label { font-size:16px; margin-top:6px; }
 
-/* IFRAME FULLSCREEN + ZOOM */
+/* IFRAME */
 iframe {
     display:none;
-    width:90%;
-    height:90%;
-    max-width:1000px;
-    max-height:800px;
-    border:1px solid #00ff66;
+    width:100%;
+    height:100%;
+    border:none; /* Remove visible border */
     z-index:4;
-    margin:auto;
-    position:absolute;
-    top:0; bottom:0; left:0; right:0;
+    position:fixed;
+    top:0; left:0;
     background:black;
-    overflow:auto;
     touch-action: pan-x pan-y pinch-zoom;
 }
 
@@ -157,7 +148,6 @@ iframe {
     padding:10px 14px;
     cursor:pointer;
 }
-
 @media(max-width:768px){
     #mobile-back { display:block; }
 }
@@ -206,7 +196,6 @@ PASSWORD REQUIRED:
 <audio id="background-music" src="Jitteridle.mp3" loop></audio>
 
 <script>
-/* ELEMENTS */
 const lobby = document.getElementById("lobby");
 const terminal = document.getElementById("terminal");
 const terminalClose = document.getElementById("terminal-close");
@@ -223,19 +212,14 @@ const checkmateFrame = document.getElementById("checkmate-frame");
 
 const bgMusic = document.getElementById("background-music");
 
-/* STATE */
-let inHallway = false;
-let inDiary = false;
-let inTerminal = false;
-let musicStarted = false;
+let inHallway=false, inDiary=false, inTerminal=false, inIframe=false;
+let musicStarted=false;
 
-/* IMAGES */
 const originalLobby = "Terminal room 2.png";
 const hallwayImage = "outside_hallway.png";
 const diaryImage = "diary.png";
 
-/* BOOT STEPS */
-const bootSteps = [
+const bootSteps=[
     "SYSTEM BOOT INITIATED...",
     "LOADING MODULES...",
     "CALIBRATING RESONATOR...",
@@ -246,71 +230,61 @@ const bootSteps = [
     "SYSTEM READY"
 ];
 
-/* LOBBY CLICK HANDLER */
+// Lobby click triggers
 lobby.addEventListener("click", e=>{
+    if(inHallway||inDiary||inTerminal||inIframe) return; // Only main lobby
+
     const x=e.clientX;
-    const y=e.clientY;
 
-    // Only triggers if in main lobby
-    if(inHallway || inDiary || inTerminal) return;
-
-    // Left side = hallway
-    if(x < window.innerWidth * 0.4){
+    if(x < window.innerWidth*0.4){ // Left = hallway
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
-        inHallway = true;
-        inDiary = false;
-        inTerminal = false;
-        mobileBack.style.display = "block";
+        inHallway=true;
+        mobileBack.style.display="block";
         return;
     }
-
-    // Right side = diary
-    if(x > window.innerWidth * 0.6){
+    if(x > window.innerWidth*0.6){ // Right = diary
         lobby.style.backgroundImage = `url("${diaryImage}")`;
-        inDiary = true;
-        inHallway = false;
-        inTerminal = false;
-        mobileBack.style.display = "block";
+        inDiary=true;
+        mobileBack.style.display="block";
         return;
     }
-
     // Middle = terminal
-    if(x >= window.innerWidth * 0.4 && x <= window.innerWidth * 0.6){
-        terminal.style.display = "block";
-        inTerminal = true;
-        mobileBack.style.display = "block";
+    if(x>=window.innerWidth*0.4 && x<=window.innerWidth*0.6){
+        terminal.style.display="block";
+        inTerminal=true;
         requestAnimationFrame(()=>passwordInput.focus());
-        return;
     }
 });
 
-/* TERMINAL CLOSE */
+// Terminal close
 terminalClose.onclick = ()=>{
-    terminal.style.display = "none";
+    terminal.style.display="none";
     passwordInput.value="";
+    inTerminal=false;
 };
 
-/* PASSWORD */
+// Password
 loginBtn.onclick = ()=>{
-    if(passwordInput.value.trim().toUpperCase() === "NOEXITFEE"){
+    if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
         startBootSequence();
     } else {
         passwordInput.value="";
     }
 };
 
-/* BOOT SEQUENCE */
+// Boot sequence
 function startBootSequence(){
     terminal.style.display="none";
+    inTerminal=false;
     bootScreen.style.display="block";
     bootScreen.textContent="";
-    let i = 0;
+    let i=0;
     function nextStep(){
         if(i<bootSteps.length){
-            bootScreen.textContent += bootSteps[i] + "\n";
-            bootScreen.scrollTop = bootScreen.scrollHeight;
+            bootScreen.textContent+=bootSteps[i]+"\n";
+            bootScreen.scrollTop=bootScreen.scrollHeight;
             i++;
-            setTimeout(nextStep, 700);
+            setTimeout(nextStep,700);
         } else {
             setTimeout(()=>{
                 bootScreen.style.display="none";
@@ -322,37 +296,43 @@ function startBootSequence(){
     nextStep();
 }
 
-/* IFRAME */
+// Iframes
 qrdIcon.onclick = ()=>{
-    qrdFrame.src = "qrd.html";
-    qrdFrame.style.display = "block";
+    qrdFrame.src="qrd.html";
+    qrdFrame.style.display="block";
+    inIframe=true;
+    mobileBack.style.display="block";
 };
 checkmateIcon.onclick = ()=>{
-    checkmateFrame.src = "cypher_chess_user_index.html";
-    checkmateFrame.style.display = "block";
+    checkmateFrame.src="cypher_chess_user_index.html";
+    checkmateFrame.style.display="block";
+    inIframe=true;
+    mobileBack.style.display="block";
 };
 
-/* BACK BUTTON */
+// Back button
 mobileBack.onclick = ()=>{
-    lobby.style.backgroundImage = `url("${originalLobby}")`;
-    inHallway = false;
-    inDiary = false;
-    inTerminal = false;
-    terminal.style.display = "none";
-    desktop.style.display = "none";
-    qrdFrame.style.display = "none";
-    checkmateFrame.style.display = "none";
-    qrdFrame.src="";
-    checkmateFrame.src="";
-    mobileBack.style.display = "none";
+    lobby.style.backgroundImage=`url("${originalLobby}")`;
+    inHallway=false;
+    inDiary=false;
+    inTerminal=false;
+    inIframe=false;
+
+    terminal.style.display="none";
+    desktop.style.display="none";
+
+    qrdFrame.style.display="none"; qrdFrame.src="";
+    checkmateFrame.style.display="none"; checkmateFrame.src="";
+
+    mobileBack.style.display="none";
 };
 
-/* ESC KEY CLOSURE */
+// ESC key
 document.addEventListener("keydown", e=>{
     if(e.key==="Escape") mobileBack.click();
 });
 
-/* MUSIC */
+// Music
 function startMusic(){
     if(!musicStarted){
         bgMusic.play().catch(()=>{});
@@ -361,7 +341,7 @@ function startMusic(){
 }
 document.addEventListener("click", startMusic,{once:true});
 document.addEventListener("keydown", startMusic,{once:true});
-
 </script>
+
 </body>
 </html>
