@@ -27,9 +27,7 @@ html, body {
     cursor: pointer;
 }
 
-#lobby.hallway {
-    background-size: cover;
-}
+#lobby.hallway { background-size: cover; }
 
 /* Flicker + scanlines */
 .flicker { animation: flicker 0.15s infinite alternate; }
@@ -49,7 +47,7 @@ html, body {
     pointer-events:none;
 }
 
-/* ===== HOTSPOT ===== */
+/* ===== HOTSPOTS ===== */
 #computer-hotspot {
     position:absolute;
     width:12vw;
@@ -58,8 +56,21 @@ html, body {
     max-height:140px;
     min-width:90px;
     min-height:90px;
-    right: 42%;
-    top: 46%;
+    right: 38%;
+    top: 40%;
+    z-index:2;
+}
+
+#diary-hotspot {
+    position:absolute;
+    width:12vw;
+    height:12vw;
+    max-width:140px;
+    max-height:140px;
+    min-width:90px;
+    min-height:90px;
+    right: 28%;
+    top: 42%;
     z-index:2;
 }
 
@@ -134,22 +145,15 @@ html, body {
 .desktop-icon .icon { font-size:48px; }
 .desktop-icon .label { font-size:16px; margin-top:6px; }
 
-/* Mobile back */
-#mobile-back {
+/* IFRAME FULLSCREEN */
+iframe {
     display:none;
     position:fixed;
-    bottom:20px;
-    left:20px;
-    z-index:10;
-    background:rgba(0,0,0,0.8);
-    border:1px solid #00ff66;
-    color:#00ff66;
-    font-size:18px;
-    padding:10px 14px;
-}
-
-@media (max-width: 768px) {
-    #mobile-back { display:block; }
+    inset:0;
+    width:100%;
+    height:100%;
+    border:none;
+    z-index:4;
 }
 </style>
 </head>
@@ -158,7 +162,7 @@ html, body {
 
 <div id="lobby" class="flicker scanlines"></div>
 <div id="computer-hotspot" title="Use Computer"></div>
-<button id="mobile-back">⟵</button>
+<div id="diary-hotspot" title="Open Diary"></div>
 
 <div id="terminal" class="flicker scanlines">
     <button id="terminal-close">✕</button>
@@ -190,8 +194,8 @@ PASSWORD REQUIRED:
         <span class="label">QRD</span>
     </div>
 
-    <iframe id="qrd-frame" style="display:none;position:absolute;inset:0;z-index:4;"></iframe>
-    <iframe id="checkmate-frame" style="display:none;position:absolute;inset:0;z-index:4;"></iframe>
+    <iframe id="qrd-frame"></iframe>
+    <iframe id="checkmate-frame"></iframe>
 </div>
 
 <audio id="background-music" src="Jitteridle.mp3" loop></audio>
@@ -200,13 +204,13 @@ PASSWORD REQUIRED:
 /* ELEMENTS */
 const lobby = document.getElementById("lobby");
 const hotspot = document.getElementById("computer-hotspot");
+const diaryHotspot = document.getElementById("diary-hotspot");
 const terminal = document.getElementById("terminal");
 const terminalClose = document.getElementById("terminal-close");
 const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("login-btn");
 const bootScreen = document.getElementById("boot-screen");
 const desktop = document.getElementById("desktop");
-const mobileBack = document.getElementById("mobile-back");
 
 const qrdIcon = document.getElementById("qrd-icon");
 const checkmateIcon = document.getElementById("checkmate-icon");
@@ -216,7 +220,6 @@ const checkmateFrame = document.getElementById("checkmate-frame");
 const bgMusic = document.getElementById("background-music");
 
 /* STATE */
-let bootTimeouts = [];
 let inHallway = false;
 let inDiary = false;
 let musicStarted = false;
@@ -226,43 +229,37 @@ const originalLobby = "Terminal room 2.png";
 const hallwayImage = "outside_hallway.png";
 const diaryImage = "diary.png";
 
-/* ZONE HELPER */
-function inZone(x,y,z){
-    const w=innerWidth,h=innerHeight;
-    return x>=w*z.x1 && x<=w*z.x2 && y>=h*z.y1 && y<=h*z.y2;
-}
-
-const ZONES = {
-    HALLWAY:{x1:0,x2:0.6,y1:0,y2:0.6},
-    BACK:{x1:0,y1:0.75,x2:1,y2:1},
-    DIARY:{x1:0.7,x2:0.95,y1:0.35,y2:0.55}
-};
-
 /* LOBBY CLICKS */
 lobby.addEventListener("click", e => {
-    const x=e.clientX, y=e.clientY;
+    const x=e.clientX;
 
-    if(!inDiary && inZone(x,y,ZONES.DIARY)){
-        lobby.style.backgroundImage=`url("${diaryImage}")`;
-        lobby.classList.add("hallway");
-        inDiary=true; inHallway=false;
-        hotspot.style.display="none";
-        return;
-    }
-
-    if(!inHallway && !inDiary && inZone(x,y,ZONES.HALLWAY)){
+    // Hallway trigger left 40%
+    if(!inHallway && !inDiary && x < window.innerWidth * 0.4){
         lobby.style.backgroundImage=`url("${hallwayImage}")`;
         lobby.classList.add("hallway");
         inHallway=true;
         hotspot.style.display="none";
+        diaryHotspot.style.display="none";
         return;
     }
 
-    if(inZone(x,y,ZONES.BACK)){
+    // Diary trigger
+    if(!inDiary && x > window.innerWidth * 0.6){
+        lobby.style.backgroundImage=`url("${diaryImage}")`;
+        lobby.classList.add("hallway");
+        inDiary=true; inHallway=false;
+        hotspot.style.display="none";
+        diaryHotspot.style.display="none";
+        return;
+    }
+
+    // Back to lobby
+    if(x >= window.innerWidth * 0.4 && x <= window.innerWidth * 0.6){
         lobby.style.backgroundImage=`url("${originalLobby}")`;
         lobby.classList.remove("hallway");
         inHallway=false; inDiary=false;
         hotspot.style.display="block";
+        diaryHotspot.style.display="block";
     }
 });
 
@@ -299,20 +296,27 @@ function startBootSequence(){
     },800);
 }
 
-/* IFRAME */
-qrdIcon.onclick=()=>{qrdFrame.src="qrd.html";qrdFrame.style.display="block";};
-checkmateIcon.onclick=()=>{checkmateFrame.src="cypher_chess_user_index.html";checkmateFrame.style.display="block";};
+/* IFRAME FULLSCREEN */
+qrdIcon.onclick=()=>{
+    qrdFrame.src="qrd.html";
+    qrdFrame.style.display="block";
+};
+checkmateIcon.onclick=()=>{
+    checkmateFrame.src="cypher_chess_user_index.html";
+    checkmateFrame.style.display="block";
+};
 
-/* BACK / ESC */
-function handleEscape(){
-    if(qrdFrame.style.display==="block"){qrdFrame.style.display="none";qrdFrame.src="";return;}
-    if(checkmateFrame.style.display==="block"){checkmateFrame.style.display="none";checkmateFrame.src="";return;}
-    if(desktop.style.display==="block"){desktop.style.display="none";return;}
-    if(terminal.style.display==="block"){terminal.style.display="none";return;}
-}
-
-mobileBack.onclick=handleEscape;
-document.addEventListener("keydown",e=>{if(e.key==="Escape")handleEscape();});
+/* ESC CLOSE */
+document.addEventListener("keydown", e => {
+    if(e.key==="Escape"){
+        [qrdFrame, checkmateFrame].forEach(f=>{
+            f.style.display="none";
+            f.src="";
+        });
+        if(desktop.style.display==="block") desktop.style.display="none";
+        if(terminal.style.display==="block") terminal.style.display="none";
+    }
+});
 
 /* MUSIC */
 function startMusic(){
@@ -327,4 +331,3 @@ document.addEventListener("keydown",startMusic,{once:true});
 
 </body>
 </html>
-
