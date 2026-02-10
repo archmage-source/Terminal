@@ -226,7 +226,7 @@ const bootSteps=[
 
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
-// Terminal zone (unchanged)
+// Terminal trigger zone
 let computerZone = { x1:0.52, x2:0.68, y1:0.26, y2:0.46 };
 
 function inZone(x, y, zone){
@@ -238,7 +238,7 @@ lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
-    // Hallway (vault door)
+    // Hallway
     if(inZone(x,y,{x1:0.02, x2:0.42, y1:0.18, y2:0.88})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
@@ -246,7 +246,7 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
-    // Diary (tight paper trigger)
+    // Diary
     if(inZone(x,y,{x1:0.70, x2:0.86, y1:0.26, y2:0.46})){
         lobby.style.backgroundImage = `url("${diaryImage}")`;
         inDiary=true;
@@ -342,35 +342,7 @@ function startMusic(){
 }
 document.addEventListener("click", startMusic,{once:true});
 document.addEventListener("keydown", startMusic,{once:true});
-
-// DEBUG overlays
-const ZONES_DEBUG = {
-    TERMINAL: computerZone,
-    HALLWAY: {x1:0.02, x2:0.42, y1:0.18, y2:0.88},
-    DIARY: {x1:0.70, x2:0.86, y1:0.26, y2:0.46}
-};
-
-for (const key in ZONES_DEBUG) {
-    const z = ZONES_DEBUG[key];
-    const overlay = document.createElement("div");
-    overlay.style.position = "absolute";
-    overlay.style.left = `${z.x1*100}%`;
-    overlay.style.top = `${z.y1*100}%`;
-    overlay.style.width = `${(z.x2-z.x1)*100}%`;
-    overlay.style.height = `${(z.y2-z.y1)*100}%`;
-    overlay.style.border = "2px dashed red";
-    overlay.style.backgroundColor = "rgba(255,0,0,0.1)";
-    overlay.style.pointerEvents = "none";
-    overlay.style.zIndex = "1000";
-    document.body.appendChild(overlay);
-}
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
