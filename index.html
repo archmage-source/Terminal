@@ -50,7 +50,7 @@ html, body {
     inset:0;
     background:black;
     color:#00ff66;
-    display:none;
+    display:none; /* start hidden */
     padding:20px;
     box-sizing:border-box;
     text-shadow:0 0 8px rgba(0,255,100,0.6);
@@ -126,6 +126,10 @@ html, body {
 
 #qrd-icon .icon {
     animation: float 1.5s ease-in-out infinite alternate;
+}
+
+#qrd-icon {
+    margin-top: 20px; /* push down to align with Checkmate */
 }
 
 .desktop-icon .label {
@@ -286,10 +290,10 @@ lobby.addEventListener("click", e=>{
     }
 });
 
-// Terminal close now works anytime and clears password
+// Terminal close always clears password
 terminalClose.onclick = ()=>{
     terminal.style.display="none";
-    passwordInput.value=""; // always clear
+    passwordInput.value=""; // clear input every time
     inTerminal=false;
 };
 
