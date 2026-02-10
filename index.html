@@ -47,34 +47,12 @@ html, body {
     pointer-events:none;
 }
 
-/* ===== HOTSPOTS ===== */
-#computer-hotspot {
-    position:absolute;
-    width:12vw;
-    height:12vw;
-    max-width:140px;
-    max-height:140px;
-    min-width:90px;
-    min-height:90px;
-    right: 38%;
-    top: 40%;
-    z-index:2;
+/* HOTSPOTS */
+#computer-hotspot, #diary-hotspot {
+    display:none;
 }
 
-#diary-hotspot {
-    position:absolute;
-    width:12vw;
-    height:12vw;
-    max-width:140px;
-    max-height:140px;
-    min-width:90px;
-    min-height:90px;
-    right: 28%;
-    top: 42%;
-    z-index:2;
-}
-
-/* ===== TERMINAL ===== */
+/* TERMINAL */
 #terminal {
     position: fixed;
     inset:0;
@@ -111,7 +89,7 @@ html, body {
     font-size:18px;
 }
 
-/* ===== BOOT ===== */
+/* BOOT SCREEN */
 #boot-screen {
     display:none;
     position: fixed;
@@ -124,7 +102,7 @@ html, body {
     z-index:3;
 }
 
-/* ===== DESKTOP ===== */
+/* DESKTOP */
 #desktop {
     display:none;
     position:fixed;
@@ -151,22 +129,43 @@ html, body {
 /* IFRAME FULLSCREEN + ZOOM */
 iframe {
     display:none;
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    border:none;
+    width:90%;
+    height:90%;
+    max-width:1000px;
+    max-height:800px;
+    border:1px solid #00ff66;
     z-index:4;
-    touch-action: pinch-zoom;
+    margin:auto;
+    position:absolute;
+    top:0; bottom:0; left:0; right:0;
+    background:black;
+    overflow:auto;
+    touch-action: pan-x pan-y pinch-zoom;
+}
+
+/* BACK BUTTON */
+#mobile-back {
+    display:none;
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    z-index:10;
+    background:rgba(0,0,0,0.8);
+    border:1px solid #00ff66;
+    color:#00ff66;
+    font-size:18px;
+    padding:10px 14px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+    #mobile-back { display:block; }
 }
 </style>
 </head>
-
 <body>
 
 <div id="lobby" class="flicker scanlines"></div>
-<div id="computer-hotspot" title="Use Computer"></div>
-<div id="diary-hotspot" title="Open Diary"></div>
 
 <div id="terminal" class="flicker scanlines">
     <button id="terminal-close">✕</button>
@@ -202,19 +201,20 @@ PASSWORD REQUIRED:
     <iframe id="checkmate-frame"></iframe>
 </div>
 
+<button id="mobile-back">⟵ BACK</button>
+
 <audio id="background-music" src="Jitteridle.mp3" loop></audio>
 
 <script>
 /* ELEMENTS */
 const lobby = document.getElementById("lobby");
-const hotspot = document.getElementById("computer-hotspot");
-const diaryHotspot = document.getElementById("diary-hotspot");
 const terminal = document.getElementById("terminal");
 const terminalClose = document.getElementById("terminal-close");
 const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("login-btn");
 const bootScreen = document.getElementById("boot-screen");
 const desktop = document.getElementById("desktop");
+const mobileBack = document.getElementById("mobile-back");
 
 const qrdIcon = document.getElementById("qrd-icon");
 const checkmateIcon = document.getElementById("checkmate-icon");
@@ -226,6 +226,7 @@ const bgMusic = document.getElementById("background-music");
 /* STATE */
 let inHallway = false;
 let inDiary = false;
+let inTerminal = false;
 let musicStarted = false;
 
 /* IMAGES */
@@ -233,63 +234,7 @@ const originalLobby = "Terminal room 2.png";
 const hallwayImage = "outside_hallway.png";
 const diaryImage = "diary.png";
 
-/* LOBBY CLICKS */
-lobby.addEventListener("click", e => {
-    const x=e.clientX;
-
-    // Hallway trigger left 40%
-    if(!inHallway && !inDiary && x < window.innerWidth * 0.4){
-        lobby.style.backgroundImage=`url("${hallwayImage}")`;
-        lobby.classList.add("hallway");
-        inHallway=true;
-        hotspot.style.display="none";
-        diaryHotspot.style.display="none";
-        return;
-    }
-
-    // Diary trigger
-    if(!inDiary && x > window.innerWidth * 0.6){
-        lobby.style.backgroundImage=`url("${diaryImage}")`;
-        lobby.classList.add("hallway");
-        inDiary=true; inHallway=false;
-        hotspot.style.display="none";
-        diaryHotspot.style.display="none";
-        return;
-    }
-
-    // Back to lobby
-    if(x >= window.innerWidth * 0.4 && x <= window.innerWidth * 0.6){
-        lobby.style.backgroundImage=`url("${originalLobby}")`;
-        lobby.classList.remove("hallway");
-        inHallway=false; inDiary=false;
-        hotspot.style.display="block";
-        diaryHotspot.style.display="block";
-    }
-});
-
-/* TERMINAL OPEN */
-hotspot.addEventListener("click", e => {
-    e.stopPropagation();
-    terminal.style.display="block";
-    requestAnimationFrame(()=>passwordInput.focus());
-});
-
-/* TERMINAL CLOSE */
-terminalClose.onclick=()=>{
-    terminal.style.display="none";
-    passwordInput.value="";
-};
-
-/* PASSWORD */
-loginBtn.onclick=()=>{
-    if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
-        startBootSequence();
-    } else {
-        passwordInput.value="";
-    }
-};
-
-/* BOOT SEQUENCE WITH LOADING TEXT */
+/* BOOT STEPS */
 const bootSteps = [
     "SYSTEM BOOT INITIATED...",
     "LOADING MODULES...",
@@ -301,50 +246,110 @@ const bootSteps = [
     "SYSTEM READY"
 ];
 
+/* LOBBY CLICK HANDLER */
+lobby.addEventListener("click", e=>{
+    const x=e.clientX;
+    const y=e.clientY;
+
+    // Only triggers if in main lobby
+    if(inHallway || inDiary || inTerminal) return;
+
+    // Left side = hallway
+    if(x < window.innerWidth * 0.4){
+        lobby.style.backgroundImage = `url("${hallwayImage}")`;
+        inHallway = true;
+        inDiary = false;
+        inTerminal = false;
+        mobileBack.style.display = "block";
+        return;
+    }
+
+    // Right side = diary
+    if(x > window.innerWidth * 0.6){
+        lobby.style.backgroundImage = `url("${diaryImage}")`;
+        inDiary = true;
+        inHallway = false;
+        inTerminal = false;
+        mobileBack.style.display = "block";
+        return;
+    }
+
+    // Middle = terminal
+    if(x >= window.innerWidth * 0.4 && x <= window.innerWidth * 0.6){
+        terminal.style.display = "block";
+        inTerminal = true;
+        mobileBack.style.display = "block";
+        requestAnimationFrame(()=>passwordInput.focus());
+        return;
+    }
+});
+
+/* TERMINAL CLOSE */
+terminalClose.onclick = ()=>{
+    terminal.style.display = "none";
+    passwordInput.value="";
+};
+
+/* PASSWORD */
+loginBtn.onclick = ()=>{
+    if(passwordInput.value.trim().toUpperCase() === "NOEXITFEE"){
+        startBootSequence();
+    } else {
+        passwordInput.value="";
+    }
+};
+
+/* BOOT SEQUENCE */
 function startBootSequence(){
     terminal.style.display="none";
     bootScreen.style.display="block";
-    bootScreen.textContent = "";
+    bootScreen.textContent="";
     let i = 0;
-
-    function showNextStep(){
-        if(i < bootSteps.length){
+    function nextStep(){
+        if(i<bootSteps.length){
             bootScreen.textContent += bootSteps[i] + "\n";
             bootScreen.scrollTop = bootScreen.scrollHeight;
             i++;
-            setTimeout(showNextStep, 700);
+            setTimeout(nextStep, 700);
         } else {
-            // After final step, show desktop after small delay
             setTimeout(()=>{
                 bootScreen.style.display="none";
                 desktop.style.display="block";
                 desktop.focus();
-            }, 500);
+            },500);
         }
     }
-    showNextStep();
+    nextStep();
 }
 
-/* IFRAME FULLSCREEN + ZOOM */
-qrdIcon.onclick=()=>{
-    qrdFrame.src="qrd.html";
-    qrdFrame.style.display="block";
+/* IFRAME */
+qrdIcon.onclick = ()=>{
+    qrdFrame.src = "qrd.html";
+    qrdFrame.style.display = "block";
 };
-checkmateIcon.onclick=()=>{
-    checkmateFrame.src="cypher_chess_user_index.html";
-    checkmateFrame.style.display="block";
+checkmateIcon.onclick = ()=>{
+    checkmateFrame.src = "cypher_chess_user_index.html";
+    checkmateFrame.style.display = "block";
 };
 
-/* ESC CLOSE */
-document.addEventListener("keydown", e => {
-    if(e.key==="Escape"){
-        [qrdFrame, checkmateFrame].forEach(f=>{
-            f.style.display="none";
-            f.src="";
-        });
-        if(desktop.style.display==="block") desktop.style.display="none";
-        if(terminal.style.display==="block") terminal.style.display="none";
-    }
+/* BACK BUTTON */
+mobileBack.onclick = ()=>{
+    lobby.style.backgroundImage = `url("${originalLobby}")`;
+    inHallway = false;
+    inDiary = false;
+    inTerminal = false;
+    terminal.style.display = "none";
+    desktop.style.display = "none";
+    qrdFrame.style.display = "none";
+    checkmateFrame.style.display = "none";
+    qrdFrame.src="";
+    checkmateFrame.src="";
+    mobileBack.style.display = "none";
+};
+
+/* ESC KEY CLOSURE */
+document.addEventListener("keydown", e=>{
+    if(e.key==="Escape") mobileBack.click();
 });
 
 /* MUSIC */
@@ -354,9 +359,9 @@ function startMusic(){
         musicStarted=true;
     }
 }
-document.addEventListener("click",startMusic,{once:true});
-document.addEventListener("keydown",startMusic,{once:true});
-</script>
+document.addEventListener("click", startMusic,{once:true});
+document.addEventListener("keydown", startMusic,{once:true});
 
+</script>
 </body>
 </html>
