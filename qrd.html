@@ -14,8 +14,6 @@ body {
   overflow: hidden;
   height: 100vh;
 }
-
-/* Full-screen section */
 .section {
   display: flex;
   justify-content: center;
@@ -25,8 +23,6 @@ body {
   box-sizing: border-box;
   padding: 2vh 2vw;
 }
-
-/* Box container */
 .box {
   border: 1px solid #00ffcc;
   padding: 2vh 2vw;
@@ -39,14 +35,10 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
-
-/* Scrollable content inside box if needed */
 .box-scroll {
   overflow-y: auto;
   width: 100%;
 }
-
-/* Keyboard */
 .keyboard {
   display: flex;
   flex-direction: column;
@@ -55,7 +47,6 @@ body {
   margin-top: 2vh;
   width: 100%;
 }
-
 .keyboard-row {
   display: flex;
   justify-content: center;
@@ -63,7 +54,6 @@ body {
   flex-wrap: wrap;
   width: 100%;
 }
-
 .key {
   border: 1px solid #00ffcc;
   background: black;
@@ -78,17 +68,8 @@ body {
   border-radius: 6px;
   transition: background 0.2s;
 }
-
-.key:hover {
-  background: #003333;
-}
-
-.key-space {
-  flex: 2 0 40%;
-  min-width: 40%;
-}
-
-/* Glyphs */
+.key:hover { background: #003333; }
+.key-space { flex: 2 0 40%; min-width: 40%; }
 .glyphs {
   display: flex;
   flex-wrap: wrap;
@@ -96,7 +77,6 @@ body {
   justify-content: center;
   margin-top: 2vh;
 }
-
 .glyph {
   border: 1px solid #00ffcc;
   padding: 2vw;
@@ -105,13 +85,7 @@ body {
   border-radius: 6px;
   text-align: center;
 }
-
-.glyph.used {
-  opacity: 0.25;
-  pointer-events: none;
-}
-
-/* Input logs */
+.glyph.used { opacity: 0.25; pointer-events: none; }
 #inputLog, #inputLog2 {
   margin-top: 1vh;
   border-top: 1px dashed #00ffcc;
@@ -119,8 +93,6 @@ body {
   font-size: 3.5vw;
   word-wrap: break-word;
 }
-
-/* Buttons */
 button {
   padding: 1.5vh 2vw;
   background: #00ffcc;
@@ -131,8 +103,6 @@ button {
   cursor: pointer;
   border-radius: 4px;
 }
-
-/* Numeric terminal */
 .pair {
   display: flex;
   justify-content: center;
@@ -141,13 +111,7 @@ button {
   flex-wrap: wrap;
   gap: 2vw;
 }
-
-.pair span {
-  min-width: 20vw;
-  text-align: center;
-  font-size: 3.5vw;
-}
-
+.pair span { min-width: 20vw; text-align: center; font-size: 3.5vw; }
 input {
   width: 14vw;
   background: black;
@@ -157,17 +121,8 @@ input {
   font-size: 3.5vw;
   padding: 0.5vh 0;
 }
-
-input:disabled {
-  opacity: 0.35;
-}
-
-.decode {
-  margin-left: 2vw;
-  font-size: 3.5vw;
-}
-
-/* Access screen */
+input:disabled { opacity: 0.35; }
+.decode { margin-left: 2vw; font-size: 3.5vw; }
 #accessScreen {
   display: flex;
   flex-direction: column;
@@ -178,59 +133,12 @@ input:disabled {
   box-sizing: border-box;
   padding: 2vh 2vw;
 }
-
-#accessGranted {
-  font-size: 6vw;
-  font-weight: bold;
-  margin-bottom: 2vh;
-  text-align: center;
-}
-
-#gibberish {
-  width: 100%;
-  max-width: 600px;
-  height: 55vh;
-  border: 1px solid #00ffcc;
-  padding: 1vh 1vw;
-  overflow-y: auto;
-  font-size: 3.5vw;
-  box-sizing: border-box;
-}
-
-/* Video */
-#unlockVideo {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  background: black;
-  z-index: 9999;
-}
-
-/* Warning & Table */
-#warningMessage {
-  margin-top: 1vh;
-  font-weight: bold;
-  color: #ff4444;
-  white-space: pre-wrap;
-  text-align: center;
-  font-size: 4vw;
-}
-
-table {
-  margin-top: 1vh;
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 3.5vw;
-}
-
-table, th, td {
-  border: 1px solid #00ffcc;
-  padding: 0.5vh 1vw;
-  text-align: center;
-}
-
+#accessGranted { font-size: 6vw; font-weight: bold; margin-bottom: 2vh; text-align: center; }
+#gibberish { width: 100%; max-width: 600px; height: 55vh; border: 1px solid #00ffcc; padding: 1vh 1vw; overflow-y: auto; font-size: 3.5vw; box-sizing: border-box; }
+#unlockVideo { position: fixed; inset: 0; width: 100%; height: 100%; display: none; background: black; z-index: 9999; }
+#warningMessage { margin-top: 1vh; font-weight: bold; color: #ff4444; white-space: pre-wrap; text-align: center; font-size: 4vw; }
+table { margin-top: 1vh; border-collapse: collapse; width: 100%; font-size: 3.5vw; }
+table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: center; }
 .hidden { display: none; }
 </style>
 </head>
@@ -271,7 +179,7 @@ table, th, td {
 
 <!-- NUMERIC TERMINAL -->
 <div id="terminal" class="section hidden">
-  <div class="box">
+  <div class="box box-scroll">
     <h3>ARCHIVE ACCESS TERMINAL</h3>
     <div id="clock"></div>
     <div id="pairs"></div>
@@ -314,152 +222,148 @@ table, th, td {
 
 <script>
 (() => {
-const PASSWORD="GLYPHGATE";
-let pw=[];
-const pwDisplay=document.getElementById("pwDisplay");
-const pwWarn=document.getElementById("pwWarn");
-const passwordGate=document.getElementById("passwordGate");
-const accessScreen=document.getElementById("accessScreen");
-const gibberish=document.getElementById("gibberish");
-const glyphGate=document.getElementById("glyphGate");
+const PASSWORD = "GLYPHGATE";
+let pw = [];
+const pwDisplay = document.getElementById("pwDisplay");
+const pwWarn = document.getElementById("pwWarn");
+const passwordGate = document.getElementById("passwordGate");
+const accessScreen = document.getElementById("accessScreen");
+const gibberish = document.getElementById("gibberish");
 
-// Keyboard
-const keyboardLayout=[["Q","W","E","R","T","Y","U","I","O","P"],["A","S","D","F","G","H","J","K","L"],["Z","X","C","V","B","N","M"],[" "]];
-const keyboard=document.getElementById("keyboard");
+// ===== KEYBOARD =====
+const keyboardLayout = [
+  ["Q","W","E","R","T","Y","U","I","O","P"],
+  ["A","S","D","F","G","H","J","K","L"],
+  ["Z","X","C","V","B","N","M"],
+  [" "]
+];
+const keyboard = document.getElementById("keyboard");
 keyboardLayout.forEach(row=>{
-  const r=document.createElement("div");
-  r.className="keyboard-row";
+  const r = document.createElement("div");
+  r.className = "keyboard-row";
   row.forEach(k=>{
-    const key=document.createElement("div");
-    key.className="key"+(k===" "?" key-space":"");
-    key.textContent=k===" "?"SPACE":k;
-    key.onclick=()=>{if(pw.length<PASSWORD.length){pw.push(k);pwDisplay.textContent=pw.join("")}};
+    const key = document.createElement("div");
+    key.className = "key" + (k===" "?" key-space":"");
+    key.textContent = k===" "?"SPACE":k;
+    key.onclick = () => { if(pw.length < PASSWORD.length){ pw.push(k); pwDisplay.textContent = pw.join(""); } };
     r.appendChild(key);
   });
   keyboard.appendChild(r);
 });
+document.getElementById("pwBack").onclick = () => { pw.pop(); pwDisplay.textContent = pw.join(""); };
 
-document.getElementById("pwBack").onclick=()=>{pw.pop();pwDisplay.textContent=pw.join("")};
-document.getElementById("pwEnter").onclick=()=>{
-  if(pw.join("")===PASSWORD){
+// ===== PASSWORD ENTER =====
+document.getElementById("pwEnter").onclick = () => {
+  if(pw.join("") === PASSWORD){
     passwordGate.classList.add("hidden");
     accessScreen.classList.remove("hidden");
 
-    const bootLines=["%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET","%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK","%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE","%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED","%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE","%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"];
+    const bootLines = [
+      "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
+      "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
+      "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
+      "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
+      "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
+      "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
+    ];
 
-    let i=0;
-    const interval=setInterval(()=>{
-      gibberish.innerHTML+=bootLines[Math.floor(Math.random()*bootLines.length)]+"<br>";
-      gibberish.scrollTop=gibberish.scrollHeight;
+    let i = 0;
+    const totalLines = 150;
+    const interval = setInterval(()=>{
+      gibberish.innerHTML += bootLines[Math.floor(Math.random()*bootLines.length)] + "<br>";
+      gibberish.scrollTop = gibberish.scrollHeight;
       i++;
-      if(i>150){
+      if(i >= totalLines){
         clearInterval(interval);
         accessScreen.classList.add("hidden");
-        glyphGate.classList.remove("hidden");
+        initGlyphGate1();
       }
     },80);
-
   } else {
-    pwWarn.textContent="INVALID INPUT";
-    pw=[];pwDisplay.textContent="";
+    pwWarn.textContent="INVALID INPUT"; pw=[]; pwDisplay.textContent="";
   }
 };
 
-// Clock
-setInterval(()=>document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB"),1000);
+// ===== CLOCK =====
+setInterval(()=>document.getElementById("clock")?.textContent = new Date().toLocaleTimeString("en-GB"),1000);
 
-/* === FULL ORIGINAL GLYPH, NUMERIC TERMINAL, SECOND GLYPH GATE LOGIC === */
+// ===== GLYPHGATE 1 =====
+function initGlyphGate1(){
+  const glyphGate = document.getElementById("glyphGate");
+  const glyphsDiv = document.getElementById("glyphs");
+  const inputText = document.getElementById("inputText");
+  const backspace = document.getElementById("backspace");
+  const glyphVerify = document.getElementById("glyphVerify");
 
-/* GLYPH ORDER */
-const glyphOrder=["𒌋𒌋𒈫","𒈫","𒐎","𒌋𒐊","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒃻","𒌋𒌋","𒃻",
-"𒌋𒌋𒈫","𒈫","𒌋𒌋𒐊","𒌋𒌋𒐊","𒌋𒐊","𒐎","𒌋𒈫","𒌋𒈫",
-"𒌋𒈫","𒌋𒈫","𒁹","𒌋𒌋𒁹","𒐊","𒌋𒐎","𒌋𒐊","𒐎","𒐎",
-"𒌋𒐊","𒐋","𒌋𒃻","𒌋𒌋𒁹","𒁹","𒐎","𒌋𒐊","𒐋",
-"𒌋𒃻","𒌋𒃻","𒐋","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒐍",
-"𒌋𒐎","𒐊","𒌋𒁹","𒌋𒐈","𒌋𒁹","𒌋𒐈",
-"𒌋𒌋𒐈","𒁹","𒌋𒌋","𒃻","𒐋","𒌋𒃻",
-"𒌋𒐎","𒐊","𒐊","𒌋𒐎","𒐊","𒌋𒐎"];
+  glyphGate.classList.remove("hidden");
 
-const glyphOrder2=["𒃻","𒌋𒌋𒃻","𒌋𒐌","𒌋𒁹","𒌋𒌋𒐈","𒐊","𒌋𒐋","𒌋𒈫","𒐋","𒌋𒌋𒈫",
-"𒃻","𒌋𒌋𒃻","𒁹","𒁹","𒌋𒁹","𒌋𒐌","𒌋𒃻","𒌋𒃻","𒌋𒌋𒐈","𒐊",
-"𒌋𒌋𒁹","𒐌","𒌋𒁹","𒌋𒐌","𒌋𒐌","𒌋𒁹","𒌋𒐋","𒌋𒈫","𒐊","𒌋𒌋𒐈",
-"𒌋𒐌","𒌋𒐋","𒌋𒈫","𒌋𒈫","𒌋𒐋","𒌋𒌋𒐈","𒐊","𒌋𒌋","𒐍","𒐌",
-"𒌋𒌋𒁹","𒐋","𒌋𒌋𒈫","𒐍","𒌋𒌋","𒐍","𒌋𒐌","𒌋𒁹","𒌋𒐊","𒌋𒐈",
-"𒌋𒐊","𒌋𒐈","𒐈","𒌋𒌋𒐊","𒐋","𒌋𒌋𒈫","𒌋𒐋","𒌋𒈫","𒐌",
-"𒌋𒌋𒁹","𒌋𒌋𒁹","𒐌"];
+  const glyphOrder = [
+    "𒌋𒌋𒈫","𒈫","𒐎","𒌋𒐊","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒃻","𒌋𒌋","𒃻",
+    "𒌋𒌋𒈫","𒈫","𒌋𒌋𒐊","𒌋𒌋𒐊","𒌋𒐊","𒐎","𒌋𒈫","𒌋𒈫",
+    "𒌋𒈫","𒌋𒈫","𒁹","𒌋𒌋𒁹","𒐊","𒌋𒐎","𒌋𒐊","𒐎","𒐎",
+    "𒌋𒐊","𒐋","𒌋𒃻","𒌋𒌋𒁹","𒁹","𒐎","𒌋𒐊","𒐋",
+    "𒌋𒃻","𒌋𒃻","𒐋","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒐍",
+    "𒌋𒐎","𒐊","𒌋𒁹","𒌋𒐈","𒌋𒁹","𒌋𒐈",
+    "𒌋𒌋𒐈","𒁹","𒌋𒌋","𒃻","𒐋","𒌋𒃻",
+    "𒌋𒐎","𒐊","𒐊","𒌋𒐎","𒐊","𒌋𒐎"
+  ];
 
-const inputPairs=[[22,2],[9,15],[1,21],[6,14],[20,4],[22,2],[25,25],[15,9],[12,12],[12,12],[1,21],[5,19],[15,9],[9,15],[6,14],[21,1],[9,15],[6,14],[14,6],[1,21],[6,18],[19,5],[11,13],[11,13],[23,1],[20,4],[6,14],[19,5],[5,19],[5,19]];
-const decodedPairs=[[4,24],[17,11],[23,5],[16,12],[6,22],[4,24],[1,1],[11,17],[14,14],[14,14],[23,5],[21,7],[11,17],[17,11],[16,12],[5,23],[17,11],[16,12],[12,16],[23,5],[20,8],[7,21],[6,22],[8,20],[20,8],[17,11],[15,13],[15,13],[3,25],[6,22]];
-
-let attempt=[], used=[];
-
-  const glyphsDiv=document.getElementById("glyphs");
-  const inputText=document.getElementById("inputText");
-  const backspace=document.getElementById("backspace");
-  const glyphVerify=document.getElementById("glyphVerify");
-  const gate=document.getElementById("glyphGate");
-  const terminal=document.getElementById("terminal");
-  const pairs=document.getElementById("pairs");
-  const decodedText=document.getElementById("decodedText");
-  const verify=document.getElementById("verify");
-  const log=document.getElementById("log");
-  const video=document.getElementById("unlockVideo");
-
-  const glyphsDiv2=document.getElementById("glyphs2");
-  const inputText2=document.getElementById("inputText2");
-  const backspace2=document.getElementById("backspace2");
-  const glyphVerify2=document.getElementById("glyphVerify2");
-  const gate2=document.getElementById("glyphGate2");
-  const warningMessage=document.getElementById("warningMessage");
-  const translationTable=document.getElementById("translationTable");
-
-  /* CLOCK */
-  setInterval(()=>{
-    document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB");
-  },1000);
-
-  /* GLYPH GATE 1 */
+  let attempt = [];
+  let used = [];
+  glyphsDiv.innerHTML = "";
+  inputText.textContent = "";
   glyphOrder.slice().sort(()=>Math.random()-.5).forEach(g=>{
-    const d=document.createElement("div");
-    d.className="glyph";
-    d.textContent=g;
+    const d = document.createElement("div");
+    d.className = "glyph";
+    d.textContent = g;
     glyphsDiv.appendChild(d);
   });
-  glyphsDiv.onclick=e=>{
+
+  glyphsDiv.onclick = e=>{
     if(!e.target.classList.contains("glyph")) return;
     e.target.classList.add("used");
     attempt.push(e.target.textContent);
     used.push(e.target);
-    inputText.textContent=attempt.join(" | ");
+    inputText.textContent = attempt.join(" | ");
   };
-  backspace.onclick=()=>{
+  backspace.onclick = ()=>{
     if(!attempt.length) return;
     attempt.pop();
     used.pop().classList.remove("used");
-    inputText.textContent=attempt.join(" | ");
+    inputText.textContent = attempt.join(" | ");
   };
-  glyphVerify.onclick=()=>{
-    if(attempt.join()!=glyphOrder.join()) resetGlyphs();
-    else{
-      gate.classList.add("hidden");
-      terminal.classList.remove("hidden");
+  glyphVerify.onclick = ()=>{
+    if(attempt.join() !== glyphOrder.join()){
+      attempt=[]; used.forEach(u=>u.classList.remove("used")); used=[];
+      inputText.textContent="";
+    } else {
+      glyphGate.classList.add("hidden");
+      initTerminal();
     }
   };
-  function resetGlyphs(){
-    attempt=[]; used=[];
-    inputText.textContent="";
-    [...glyphsDiv.children].forEach(g=>g.classList.remove("used"));
-  }
+}
 
-  /* NUMERIC TERMINAL */
+// ===== NUMERIC TERMINAL =====
+function initTerminal(){
+  const terminal = document.getElementById("terminal");
+  const pairsDiv = document.getElementById("pairs");
+  const decodedText = document.getElementById("decodedText");
+  const verifyBtn = document.getElementById("verify");
+  terminal.classList.remove("hidden");
+
+  const inputPairs = [[22,2],[9,15],[1,21],[6,14],[20,4],[22,2],[25,25],[15,9],[12,12],[12,12],[1,21],[5,19],[15,9],[9,15],[6,14],[21,1],[9,15],[6,14],[14,6],[1,21],[6,18],[19,5],[11,13],[11,13],[23,1],[20,4],[6,14],[19,5],[5,19],[5,19]];
+  const decodedPairs = [[4,24],[17,11],[23,5],[16,12],[6,22],[4,24],[1,1],[11,17],[14,14],[14,14],[23,5],[21,7],[11,17],[17,11],[16,12],[5,23],[17,11],[16,12],[12,16],[23,5],[20,8],[7,21],[6,22],[8,20],[20,8],[17,11],[15,13],[15,13],[3,25],[6,22]];
+
   let idx=0;
+  pairsDiv.innerHTML="";
   inputPairs.forEach((_,i)=>{
-    pairs.innerHTML+=`<div class="pair"><span>PAIR ${String(i+1).padStart(2,"0")}:</span><input type="number" disabled><input type="number" disabled><span class="decode">[locked]</span></div>`;
+    pairsDiv.innerHTML += `<div class="pair"><span>PAIR ${String(i+1).padStart(2,"0")}:</span><input type="number" disabled><input type="number" disabled><span class="decode">[locked]</span></div>`;
   });
-  pairs.children[0].querySelectorAll("input").forEach(i=>i.disabled=false);
-  pairs.oninput=e=>{
-    const row=e.target.closest(".pair");
-    const i=[...pairs.children].indexOf(row);
+  pairsDiv.children[0].querySelectorAll("input").forEach(x=>x.disabled=false);
+
+  pairsDiv.oninput = e=>{
+    const row = e.target.closest(".pair");
+    const i = [...pairsDiv.children].indexOf(row);
     if(i!==idx) return;
     const [a,b]=inputPairs[i];
     const inputs=row.querySelectorAll("input");
@@ -467,64 +371,52 @@ let attempt=[], used=[];
       inputs.forEach(x=>x.disabled=true);
       row.querySelector(".decode").textContent=`[${a} | ${b}]`;
       const [x,y]=decodedPairs[i];
-      decodedText.textContent+=`[${x} | ${y}] `;
+      decodedText.textContent += `[${x} | ${y}] `;
       idx++;
-      if(pairs.children[idx]) pairs.children[idx].querySelectorAll("input").forEach(x=>x.disabled=false);
-      else verify.disabled=false;
+      if(pairsDiv.children[idx]) pairsDiv.children[idx].querySelectorAll("input").forEach(x=>x.disabled=false);
+      else verifyBtn.disabled=false;
     }
   };
 
-  /* VIDEO & SECOND GLYPH GATE */
-verify.onclick = () => {
-  const log = document.getElementById("log") || console;
+  verifyBtn.onclick = () => {
+    terminal.classList.add("hidden");
+    initGlyphGate2();
+  };
+}
 
-  // Get current time
-  const now = new Date();
-  const hours = now.getHours();     // 0–23
-  const minutes = now.getMinutes(); // 0–59
-  const totalMinutes = hours * 60 + minutes;
+// ===== GLYPHGATE 2 =====
+function initGlyphGate2(){
+  const gate2 = document.getElementById("glyphGate2");
+  const glyphsDiv2 = document.getElementById("glyphs2");
+  const inputText2 = document.getElementById("inputText2");
+  const backspace2 = document.getElementById("backspace2");
+  const glyphVerify2 = document.getElementById("glyphVerify2");
+  const warningMessage = document.getElementById("warningMessage");
+  const translationTable = document.getElementById("translationTable");
 
-  // Allowed time window: 19:43 (1183) -> 20:26 (1226)
-  if (totalMinutes >= 1183 && totalMinutes <= 1226) {
-    // Sequence verified and time within window -> play video
-    log.textContent = "ACCESS GRANTED";
+  gate2.classList.remove("hidden");
 
-    video.style.display = "block";
-    video.style.opacity = 0;
+  const glyphOrder2 = [
+    "𒃻","𒌋𒌋𒃻","𒌋𒐌","𒌋𒁹","𒌋𒌋𒐈","𒐊","𒌋𒐋","𒌋𒈫","𒐋","𒌋𒌋𒈫",
+    "𒃻","𒌋𒌋𒃻","𒁹","𒁹","𒌋𒁹","𒌋𒐌","𒌋𒃻","𒌋𒃻","𒌋𒌋𒐈","𒐊",
+    "𒌋𒌋𒁹","𒐌","𒌋𒁹","𒌋𒐌","𒌋𒐌","𒌋𒁹","𒌋𒐋","𒌋𒈫","𒐊","𒌋𒌋𒐈",
+    "𒌋𒐌","𒌋𒐋","𒌋𒈫","𒌋𒈫","𒌋𒐋","𒌋𒌋𒐈","𒐊","𒌋𒌋","𒐍","𒐌",
+    "𒌋𒌋𒁹","𒐋","𒌋𒌋𒈫","𒐍","𒌋𒌋","𒐍","𒌋𒐌","𒌋𒁹","𒌋𒐊","𒌋𒐈",
+    "𒌋𒐊","𒌋𒐈","𒐈","𒌋𒌋𒐊","𒐋","𒌋𒌋𒈫","𒌋𒐋","𒌋𒈫","𒐌",
+    "𒌋𒌋𒁹","𒌋𒌋𒁹","𒐌"
+  ];
 
-    // Set video source properly
-    video.src = "the_hallway.mp4";
-    video.load();
-    video.volume = 1;
+  let attempt = [];
+  let used = [];
+  glyphsDiv2.innerHTML="";
+  inputText2.textContent="";
+  glyphOrder2.slice().sort(()=>Math.random()-.5).forEach(g=>{
+    const d=document.createElement("div");
+    d.className="glyph";
+    d.textContent=g;
+    glyphsDiv2.appendChild(d);
+  });
 
-    video.onended = () => {
-      video.style.display = "none";
-      terminal.classList.add("hidden");
-      gate2.classList.remove("hidden");
-
-      attempt = [];
-      used = [];
-      glyphsDiv2.innerHTML = "";
-      glyphOrder2.slice().sort(() => Math.random() - 0.5).forEach(g => {
-        const d = document.createElement("div");
-        d.className = "glyph";
-        d.textContent = g;
-        glyphsDiv2.appendChild(d);
-      });
-    };
-
-    video.play().catch(err => console.error("Video play failed:", err));
-    setTimeout(() => video.style.opacity = 1, 50);
-
-  } else {
-    // Outside time window -> pretend nothing happens
-    log.textContent = "ACCESS DENIED"; // subtle, optional
-  }
-};
-
-
-
-  /* GLYPH GATE 2 */
   glyphsDiv2.onclick=e=>{
     if(!e.target.classList.contains("glyph")) return;
     e.target.classList.add("used");
@@ -539,36 +431,26 @@ verify.onclick = () => {
     inputText2.textContent=attempt.join(" | ");
   };
   glyphVerify2.onclick=()=>{
-    if(attempt.join()!=glyphOrder2.join()) resetGlyphs2();
-    else showTranslation();
+    if(attempt.join() !== glyphOrder2.join()){
+      attempt=[]; used.forEach(u=>u.classList.remove("used")); used=[];
+      inputText2.textContent="";
+    } else {
+      // Show warning & translation table
+      const msg="WARNING FUNCTION COLLAPSE INITIALIZED\nSUBJECT STATUS: SIGNAL LOST";
+      let i=0;
+      warningMessage.textContent="";
+      const interval=setInterval(()=>{
+        warningMessage.textContent += msg[i];
+        i++;
+        if(i>=msg.length){
+          clearInterval(interval);
+          translationTable.classList.remove("hidden");
+        }
+      },50);
+    }
   };
-  function resetGlyphs2(){
-    attempt=[]; used=[];
-    inputText2.textContent="";
-    [...glyphsDiv2.children].forEach(g=>g.classList.remove("used"));
-  }
-  function showTranslation(){
-    let msg="WARNING FUNCTION COLLAPSE INITIALIZED\nSUBJECT STATUS: SIGNAL LOST";
-    let i=0;
-    warningMessage.textContent="";
-    const interval=setInterval(()=>{
-      warningMessage.textContent+=msg[i];
-      i++;
-      if(i>=msg.length){
-        clearInterval(interval);
-        translationTable.classList.remove("hidden");
-      }
-    },50);
-  }
-
+}
 })();
 </script>
-
 </body>
 </html>
-
-
-
-
-
-
