@@ -105,16 +105,37 @@ html, body {
 }
 
 .desktop-icon {
-    display:inline-block;
-    width:80px;
-    height:100px;
-    margin:20px;
-    text-align:center;
-    cursor:pointer;
+    display: flex;
+    flex-direction: column;  /* icon above label */
+    align-items: center;     /* center horizontally */
+    justify-content: flex-start;
+    width: 80px;
+    height: 100px;
+    margin: 20px;
+    text-align: center;
+    cursor: pointer;
 }
 
-.desktop-icon .icon { font-size:48px; }
-.desktop-icon .label { font-size:16px; margin-top:6px; }
+.desktop-icon .icon {
+    font-size: 48px;
+    display: inline-block;
+    /* Floating animation for QRD icon only */
+}
+
+#qrd-icon .icon {
+    animation: float 1.5s ease-in-out infinite alternate;
+}
+
+.desktop-icon .label {
+    font-size: 16px;
+    margin-top: 6px;
+}
+
+/* Floating animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-5px); } /* float up by 5px */
+}
 
 iframe {
     display:none;
@@ -226,7 +247,6 @@ const bootSteps=[
 
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
-// Terminal trigger zone
 let computerZone = { x1:0.52, x2:0.68, y1:0.26, y2:0.46 };
 
 function inZone(x, y, zone){
@@ -238,7 +258,6 @@ lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
-    // Hallway
     if(inZone(x,y,{x1:0.02, x2:0.42, y1:0.18, y2:0.88})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
@@ -246,7 +265,6 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
-    // Diary
     if(inZone(x,y,{x1:0.70, x2:0.86, y1:0.26, y2:0.46})){
         lobby.style.backgroundImage = `url("${diaryImage}")`;
         inDiary=true;
@@ -254,7 +272,6 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
-    // Terminal
     if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
