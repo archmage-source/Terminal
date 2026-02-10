@@ -49,6 +49,7 @@ body{
   gap: 4px;
   justify-content: center;
   width: 100%;
+  flex-wrap:wrap;
 }
 .key {
   border: 1px solid #00ffcc;
@@ -73,16 +74,19 @@ body{
   flex-wrap: wrap;
   gap: 4px;
   justify-content: center;
+  max-width:100%;
+  overflow-x:auto;
+  padding-bottom:4px;
 }
 .glyph {
   border: 1px solid #00ffcc;
-  padding: 6px 0;
-  flex: 1 1 20%;
-  min-width: 40px;
+  flex: 1 1 clamp(40px, 12%, 60px);
+  min-width:40px;
+  max-width:60px;
   text-align: center;
   cursor: pointer;
   font-size: clamp(16px, 4vw, 24px);
-  height: clamp(40px, 6vw, 60px);
+  height: clamp(40px,6vw,60px);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -122,10 +126,13 @@ button{
 .pair span{width:70px; flex-shrink:0;}
 input{
   width:44px;
+  min-width:40px;
+  padding:6px;
   background:black;
   color:#00ffcc;
   border:1px solid #00ffcc;
   text-align:center;
+  font-size:clamp(12px,3vw,16px);
 }
 input:disabled{opacity:.35}
 .decode{margin-left:8px; flex-shrink:0;}
@@ -524,3 +531,4 @@ verify.onclick = () => {
 
 </body>
 </html>
+
