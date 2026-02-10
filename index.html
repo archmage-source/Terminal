@@ -50,11 +50,11 @@ html, body {
     inset:0;
     background:black;
     color:#00ff66;
-    display:none; /* start hidden */
+    display:none; /* hidden at launch */
     padding:20px;
     box-sizing:border-box;
     text-shadow:0 0 8px rgba(0,255,100,0.6);
-    z-index:5; /* above everything */
+    z-index:5;
     overflow-y: auto;
 }
 
@@ -103,15 +103,15 @@ html, body {
     z-index:3;
     overflow:hidden;
 
-    display: flex;            /* row layout for icons */
+    display: flex;
     flex-direction: row;
     align-items: flex-start;
 }
 
 .desktop-icon {
     display: flex;
-    flex-direction: column;  /* icon above label */
-    align-items: center;     /* center horizontally */
+    flex-direction: column;
+    align-items: center;
     justify-content: flex-start;
     width: 80px;
     height: 100px;
@@ -124,12 +124,12 @@ html, body {
     font-size: 48px;
 }
 
-#qrd-icon .icon {
-    animation: float 1.5s ease-in-out infinite alternate;
+#qrd-icon {
+    margin-top: 30px; /* slightly lower to align with Checkmate */
 }
 
-#qrd-icon {
-    margin-top: 20px; /* push down to align with Checkmate */
+#qrd-icon .icon {
+    animation: float 1.5s ease-in-out infinite alternate;
 }
 
 .desktop-icon .label {
@@ -137,7 +137,6 @@ html, body {
     margin-top: 6px;
 }
 
-/* Floating animation */
 @keyframes float {
     0% { transform: translateY(0px); }
     100% { transform: translateY(-5px); }
@@ -253,6 +252,7 @@ const bootSteps=[
 
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
+// Computer trigger zone
 let computerZone = { x1:0.52, x2:0.68, y1:0.26, y2:0.46 };
 
 function inZone(x, y, zone){
@@ -281,7 +281,7 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
-    // Terminal
+    // Terminal (computer)
     if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
@@ -290,10 +290,10 @@ lobby.addEventListener("click", e=>{
     }
 });
 
-// Terminal close always clears password
+// Terminal close clears password anytime
 terminalClose.onclick = ()=>{
     terminal.style.display="none";
-    passwordInput.value=""; // clear input every time
+    passwordInput.value="";
     inTerminal=false;
 };
 
@@ -322,7 +322,7 @@ function startBootSequence(){
         } else {
             setTimeout(()=>{
                 bootScreen.style.display="none";
-                desktop.style.display="block";
+                desktop.style.display="flex";
                 desktop.focus();
             },500);
         }
@@ -330,7 +330,7 @@ function startBootSequence(){
     nextStep();
 }
 
-// Iframes
+// Iframes open only when icon clicked
 qrdIcon.onclick = ()=>{
     qrdFrame.src="qrd.html";
     qrdFrame.style.display="block";
