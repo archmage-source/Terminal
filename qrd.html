@@ -3,62 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <title>ARCHIVE ACCESS NODE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* ===== GLOBAL ===== */
-body {
-  margin:0; padding:0;
-  background:#050505; color:#00ffcc;
-  font-family:monospace; overflow:hidden;
-  height:100vh; width:100vw;
+body{
+  margin:0;
+  padding:0;
+  background:#050505;
+  color:#00ffcc;
+  font-family:monospace;
+  overflow:hidden;
 }
-.section {
-  display:flex; justify-content:center; align-items:center;
-  height:100vh; width:100%;
-  box-sizing:border-box; padding:2vh 2vw;
+.section{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  width:100%;
+  overflow:auto;
+  padding:12px;
+  box-sizing:border-box;
 }
-.box {
-  border:1px solid #00ffcc; padding:2vh 2vw;
-  width:96%; max-width:600px; display:flex;
-  flex-direction:column; align-items:center;
-  height:90vh; box-sizing:border-box;
+.box{
+  border:1px solid #00ffcc;
+  padding:24px;
+  max-width:720px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  box-sizing:border-box;
 }
+.hidden{display:none}
 
-/* ===== KEYBOARD ===== */
-.keyboard { display:flex; flex-direction:column; align-items:center; gap:3vh; width:100%; min-height:30vh; }
-.keyboard-row { display:flex; flex-wrap:wrap; justify-content:center; gap:2vw; width:100%; }
+/* KEYBOARD */
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  width: 100%;
+}
+.keyboard-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  width: 100%;
+}
 .key {
-  border:1px solid #00ffcc; background:#000; color:#00ffcc;
-  min-width:10vw; padding:2vh 0; text-align:center;
-  cursor:pointer; user-select:none; font-size:5vw; border-radius:6px;
+  border: 1px solid #00ffcc;
+  padding: 10px 0;
+  flex: 1 1 0;
+  min-width: 24px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: clamp(12px, 3vw, 18px);
+  border-radius: 4px;
 }
-.key-space { min-width:40%; font-size:4vw; }
-.key:hover { background:#003333; }
+.key:hover { background: #003333; }
+.key-space {
+  flex: 3 1 0;
+  min-width: 60px;
+}
 
-/* ===== GLYPHS ===== */
-.glyphs { display:flex; flex-wrap:wrap; gap:2vw; justify-content:center; margin-top:2vh; }
-.glyph { border:1px solid #00ffcc; padding:3vw; cursor:pointer; font-size:5vw; border-radius:6px; text-align:center; }
-.glyph.used { opacity:0.25; pointer-events:none; }
-#inputLog,#inputLog2 { margin-top:1vh; border-top:1px dashed #00ffcc; padding-top:0.5vh; font-size:4vw; word-wrap:break-word; }
-button { padding:1.5vh 2vw; background:#00ffcc; border:none; font-weight:bold; font-size:4vw; margin-top:1vh; cursor:pointer; border-radius:4px; }
+/* GLYPHS */
+.glyphs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.glyph {
+  border: 1px solid #00ffcc;
+  padding: 6px 0;
+  flex: 1 1 20%;
+  min-width: 40px;
+  text-align: center;
+  cursor: pointer;
+  font-size: clamp(16px, 4vw, 24px);
+  height: clamp(40px, 6vw, 60px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+}
+.glyph.used { opacity: .25; pointer-events: none; }
 
-/* ===== TERMINAL ===== */
-.pair { display:flex; justify-content:center; align-items:center; margin-bottom:1vh; flex-wrap:wrap; gap:2vw; }
-.pair span { min-width:20vw; text-align:center; font-size:3.5vw; }
-input { width:14vw; background:black; color:#00ffcc; border:1px solid #00ffcc; text-align:center; font-size:3.5vw; padding:0.5vh 0; }
-input:disabled { opacity:0.35; }
-.decode { margin-left:2vw; font-size:3.5vw; }
+#inputLog,#inputLog2{
+  margin-top:6px;
+  border-top:1px dashed #00ffcc;
+  padding-top:5px;
+  font-size:.8em;
+  word-break:break-word;
+}
 
-/* ===== ACCESS SCREEN ===== */
-#accessScreen { display:flex; flex-direction:column; justify-content:flex-start; align-items:center; height:100%; width:100%; box-sizing:border-box; padding:2vh 2vw; }
-#accessGranted { font-size:6vw; font-weight:bold; margin-bottom:2vh; text-align:center; }
-#gibberish { width:100%; max-width:600px; height:55vh; border:1px solid #00ffcc; padding:1vh 1vw; overflow-y:auto; font-size:3.5vw; box-sizing:border-box; }
-#unlockVideo { position:fixed; inset:0; width:100%; height:100%; display:none; background:black; z-index:9999; }
+/* Controls */
+button{
+  padding:8px;
+  background:#00ffcc;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:clamp(12px,3vw,16px);
+  border-radius:4px;
+}
 
-/* ===== WARNINGS / TABLE ===== */
-#warningMessage { margin-top:1vh; font-weight:bold; color:#ff4444; white-space:pre-wrap; text-align:center; font-size:4vw; }
-table { margin-top:1vh; border-collapse:collapse; width:100%; font-size:3.5vw; }
-table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; }
-.hidden { display:none; }
+/* Numeric terminal */
+#clock{margin-bottom:6px;font-weight:bold}
+.pair{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:4px;
+  flex-wrap:wrap;
+  gap:4px;
+}
+.pair span{width:70px; flex-shrink:0;}
+input{
+  width:44px;
+  background:black;
+  color:#00ffcc;
+  border:1px solid #00ffcc;
+  text-align:center;
+}
+input:disabled{opacity:.35}
+.decode{margin-left:8px; flex-shrink:0;}
+
+/* Access screen */
+#accessGranted{
+  font-size:2em;
+  font-weight:bold;
+  margin-bottom:12px;
+  text-align:center;
+}
+#gibberish{
+  width:100%;
+  max-width:720px;
+  height:55vh;
+  border:1px solid #00ffcc;
+  padding:10px;
+  overflow-y:auto;
+  font-size:.85em;
+  word-break:break-word;
+}
+
+/* Video */
+#unlockVideo{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:none;
+  background:black;
+  z-index:9999;
+  object-fit:cover;
+}
+
+/* Warning & Table */
+#warningMessage{
+  margin-top:12px;
+  font-weight:bold;
+  color:#ff4444;
+  white-space:pre-wrap;
+  text-align:center;
+}
+table{
+  margin-top:12px;
+  border-collapse:collapse;
+  width:100%;
+  table-layout:fixed;
+  word-wrap:break-word;
+}
+table,th,td{
+  border:1px solid #00ffcc;
+  padding:6px;
+  text-align:center;
+}
 </style>
 </head>
 <body>
@@ -69,7 +190,7 @@ table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; 
     <h3>ENTER ACCESS PASSWORD</h3>
     <div id="pwDisplay" style="min-height:24px;margin-bottom:6px"></div>
     <div class="keyboard" id="keyboard"></div>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
       <button id="pwBack">BACKSPACE</button>
       <button id="pwEnter">ENTER</button>
     </div>
@@ -83,20 +204,20 @@ table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; 
   <div id="gibberish"></div>
 </div>
 
-<!-- GLYPH GATE 1 -->
+<!-- FIRST GLYPH GATE -->
 <div id="glyphGate" class="section hidden">
   <div class="box">
     <h3>SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs"></div>
     <div id="inputLog"><strong>INPUT:</strong> <span id="inputText"></span></div>
-    <div class="glyph-controls">
+    <div class="glyph-controls" style="display:flex;flex-wrap:wrap;gap:4px;">
       <button id="backspace">BACKSPACE</button>
       <button id="glyphVerify">VERIFY SEQUENCE</button>
     </div>
   </div>
 </div>
 
-<!-- TERMINAL -->
+<!-- NUMERIC TERMINAL -->
 <div id="terminal" class="section hidden">
   <div class="box">
     <h3>ARCHIVE ACCESS TERMINAL</h3>
@@ -107,13 +228,13 @@ table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; 
   </div>
 </div>
 
-<!-- GLYPH GATE 2 -->
+<!-- SECOND GLYPH GATE -->
 <div id="glyphGate2" class="section hidden">
   <div class="box">
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs2"></div>
     <div id="inputLog2"><strong>INPUT:</strong> <span id="inputText2"></span></div>
-    <div class="glyph-controls">
+    <div class="glyph-controls" style="display:flex;flex-wrap:wrap;gap:4px;">
       <button id="backspace2">BACKSPACE</button>
       <button id="glyphVerify2">VERIFY SEQUENCE</button>
     </div>
@@ -140,244 +261,266 @@ table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; 
 <video id="unlockVideo" playsinline></video>
 
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
+// ==== ORIGINAL JS LOGIC ====
+(() => {
+const PASSWORD="GLYPHGATE";
+let pw=[];
+const pwDisplay=document.getElementById("pwDisplay");
+const pwWarn=document.getElementById("pwWarn");
+const passwordGate=document.getElementById("passwordGate");
+const accessScreen=document.getElementById("accessScreen");
+const gibberish=document.getElementById("gibberish");
+const glyphGate=document.getElementById("glyphGate");
 
-  const PASSWORD = "GLYPHGATE";
-  let pw = [];
-  const pwDisplay = document.getElementById("pwDisplay");
-  const pwWarn = document.getElementById("pwWarn");
+const keyboardLayout=[
+["Q","W","E","R","T","Y","U","I","O","P"],
+["A","S","D","F","G","H","J","K","L"],
+["Z","X","C","V","B","N","M"],
+[" "]
+];
 
-  const passwordGate = document.getElementById("passwordGate");
-  const accessScreen = document.getElementById("accessScreen");
-  const gibberish = document.getElementById("gibberish");
-
-  const keyboardLayout = [
-    ["Q","W","E","R","T","Y","U","I","O","P"],
-    ["A","S","D","F","G","H","J","K","L"],
-    ["Z","X","C","V","B","N","M"],
-    [" "]
-  ];
-
-  const keyboard = document.getElementById("keyboard");
-  keyboardLayout.forEach(row=>{
-    const r = document.createElement("div");
-    r.className = "keyboard-row";
-    row.forEach(k=>{
-      const key = document.createElement("div");
-      key.className = "key" + (k===" "?" key-space":"");
-      key.textContent = k===" "?"SPACE":k;
-      key.onclick = ()=>{
-        if(pw.length<PASSWORD.length){
-          pw.push(k);
-          pwDisplay.textContent = pw.join("");
-        }
-      };
-      r.appendChild(key);
-    });
-    keyboard.appendChild(r);
+const keyboard=document.getElementById("keyboard");
+keyboardLayout.forEach(row=>{
+  const r=document.createElement("div");
+  r.className="keyboard-row";
+  row.forEach(k=>{
+    const key=document.createElement("div");
+    key.className="key"+(k===" "?" key-space":"");
+    key.textContent=k===" "?"SPACE":k;
+    key.onclick=()=>{if(pw.length<PASSWORD.length){pw.push(k);pwDisplay.textContent=pw.join("")}};
+    r.appendChild(key);
   });
+  keyboard.appendChild(r);
+});
 
-  document.getElementById("pwBack").onclick = ()=>{ pw.pop(); pwDisplay.textContent=pw.join(""); };
+document.getElementById("pwBack").onclick=()=>{pw.pop();pwDisplay.textContent=pw.join("")};
+document.getElementById("pwEnter").onclick=()=>{
+  if(pw.join("")===PASSWORD){
+    passwordGate.classList.add("hidden");
+    accessScreen.classList.remove("hidden");
+    const bootLines=[
+      "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
+      "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
+      "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
+      "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
+      "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
+      "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
+    ];
+    let i=0;
+    const interval=setInterval(()=>{
+      gibberish.innerHTML+=bootLines[Math.floor(Math.random()*bootLines.length)]+"<br>";
+      gibberish.scrollTop=gibberish.scrollHeight;
+      i++;
+      if(i>150){
+        clearInterval(interval);
+        accessScreen.classList.add("hidden");
+        glyphGate.classList.remove("hidden");
+      }
+    },80);
+  }else{
+    pwWarn.textContent="INVALID INPUT";
+    pw=[];pwDisplay.textContent="";
+  }
+};
 
-  document.getElementById("pwEnter").onclick = ()=>{
-    if(pw.join("")===PASSWORD){
-      passwordGate.classList.add("hidden");
-      accessScreen.classList.remove("hidden");
+// CLOCK
+setInterval(()=>document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB"),1000);
 
-      // boot sequence
-      const bootLines=[
-        "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
-        "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
-        "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
-        "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
-        "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
-        "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
-      ];
-      let i=0;
-      const interval=setInterval(()=>{
-        gibberish.innerHTML += bootLines[Math.floor(Math.random()*bootLines.length)]+"<br>";
-        gibberish.scrollTop = gibberish.scrollHeight;
-        i++;
-        if(i>=150){
-          clearInterval(interval);
-          accessScreen.classList.add("hidden");
-          initGlyphGate1();
-        }
-      },80);
+/* === FULL ORIGINAL GLYPH, NUMERIC TERMINAL, SECOND GLYPH GATE LOGIC === */
 
-    } else {
-      pwWarn.textContent="INVALID INPUT"; pw=[]; pwDisplay.textContent="";
+/* GLYPH ORDER */
+const glyphOrder=["𒌋𒌋𒈫","𒈫","𒐎","𒌋𒐊","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒃻","𒌋𒌋","𒃻",
+"𒌋𒌋𒈫","𒈫","𒌋𒌋𒐊","𒌋𒌋𒐊","𒌋𒐊","𒐎","𒌋𒈫","𒌋𒈫",
+"𒌋𒈫","𒌋𒈫","𒁹","𒌋𒌋𒁹","𒐊","𒌋𒐎","𒌋𒐊","𒐎","𒐎",
+"𒌋𒐊","𒐋","𒌋𒃻","𒌋𒌋𒁹","𒁹","𒐎","𒌋𒐊","𒐋",
+"𒌋𒃻","𒌋𒃻","𒐋","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒐍",
+"𒌋𒐎","𒐊","𒌋𒁹","𒌋𒐈","𒌋𒁹","𒌋𒐈",
+"𒌋𒌋𒐈","𒁹","𒌋𒌋","𒃻","𒐋","𒌋𒃻",
+"𒌋𒐎","𒐊","𒐊","𒌋𒐎","𒐊","𒌋𒐎"];
+
+const glyphOrder2=["𒃻","𒌋𒌋𒃻","𒌋𒐌","𒌋𒁹","𒌋𒌋𒐈","𒐊","𒌋𒐋","𒌋𒈫","𒐋","𒌋𒌋𒈫",
+"𒃻","𒌋𒌋𒃻","𒁹","𒁹","𒌋𒁹","𒌋𒐌","𒌋𒃻","𒌋𒃻","𒌋𒌋𒐈","𒐊",
+"𒌋𒌋𒁹","𒐌","𒌋𒁹","𒌋𒐌","𒌋𒐌","𒌋𒁹","𒌋𒐋","𒌋𒈫","𒐊","𒌋𒌋𒐈",
+"𒌋𒐌","𒌋𒐋","𒌋𒈫","𒌋𒈫","𒌋𒐋","𒌋𒌋𒐈","𒐊","𒌋𒌋","𒐍","𒐌",
+"𒌋𒌋𒁹","𒐋","𒌋𒌋𒈫","𒐍","𒌋𒌋","𒐍","𒌋𒐌","𒌋𒁹","𒌋𒐊","𒌋𒐈",
+"𒌋𒐊","𒌋𒐈","𒐈","𒌋𒌋𒐊","𒐋","𒌋𒌋𒈫","𒌋𒐋","𒌋𒈫","𒐌",
+"𒌋𒌋𒁹","𒌋𒌋𒁹","𒐌"];
+
+const inputPairs=[[22,2],[9,15],[1,21],[6,14],[20,4],[22,2],[25,25],[15,9],[12,12],[12,12],[1,21],[5,19],[15,9],[9,15],[6,14],[21,1],[9,15],[6,14],[14,6],[1,21],[6,18],[19,5],[11,13],[11,13],[23,1],[20,4],[6,14],[19,5],[5,19],[5,19]];
+const decodedPairs=[[4,24],[17,11],[23,5],[16,12],[6,22],[4,24],[1,1],[11,17],[14,14],[14,14],[23,5],[21,7],[11,17],[17,11],[16,12],[5,23],[17,11],[16,12],[12,16],[23,5],[20,8],[7,21],[6,22],[8,20],[20,8],[17,11],[15,13],[15,13],[3,25],[6,22]];
+
+let attempt=[], used=[];
+
+  const glyphsDiv=document.getElementById("glyphs");
+  const inputText=document.getElementById("inputText");
+  const backspace=document.getElementById("backspace");
+  const glyphVerify=document.getElementById("glyphVerify");
+  const gate=document.getElementById("glyphGate");
+  const terminal=document.getElementById("terminal");
+  const pairs=document.getElementById("pairs");
+  const decodedText=document.getElementById("decodedText");
+  const verify=document.getElementById("verify");
+  const log=document.getElementById("log");
+  const video=document.getElementById("unlockVideo");
+
+  const glyphsDiv2=document.getElementById("glyphs2");
+  const inputText2=document.getElementById("inputText2");
+  const backspace2=document.getElementById("backspace2");
+  const glyphVerify2=document.getElementById("glyphVerify2");
+  const gate2=document.getElementById("glyphGate2");
+  const warningMessage=document.getElementById("warningMessage");
+  const translationTable=document.getElementById("translationTable");
+
+  /* CLOCK */
+  setInterval(()=>{
+    document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB");
+  },1000);
+
+  /* GLYPH GATE 1 */
+  glyphOrder.slice().sort(()=>Math.random()-.5).forEach(g=>{
+    const d=document.createElement("div");
+    d.className="glyph";
+    d.textContent=g;
+    glyphsDiv.appendChild(d);
+  });
+  glyphsDiv.onclick=e=>{
+    if(!e.target.classList.contains("glyph")) return;
+    e.target.classList.add("used");
+    attempt.push(e.target.textContent);
+    used.push(e.target);
+    inputText.textContent=attempt.join(" | ");
+  };
+  backspace.onclick=()=>{
+    if(!attempt.length) return;
+    attempt.pop();
+    used.pop().classList.remove("used");
+    inputText.textContent=attempt.join(" | ");
+  };
+  glyphVerify.onclick=()=>{
+    if(attempt.join()!=glyphOrder.join()) resetGlyphs();
+    else{
+      gate.classList.add("hidden");
+      terminal.classList.remove("hidden");
+    }
+  };
+  function resetGlyphs(){
+    attempt=[]; used=[];
+    inputText.textContent="";
+    [...glyphsDiv.children].forEach(g=>g.classList.remove("used"));
+  }
+
+  /* NUMERIC TERMINAL */
+  let idx=0;
+  inputPairs.forEach((_,i)=>{
+    pairs.innerHTML+=`<div class="pair"><span>PAIR ${String(i+1).padStart(2,"0")}:</span><input type="number" disabled><input type="number" disabled><span class="decode">[locked]</span></div>`;
+  });
+  pairs.children[0].querySelectorAll("input").forEach(i=>i.disabled=false);
+  pairs.oninput=e=>{
+    const row=e.target.closest(".pair");
+    const i=[...pairs.children].indexOf(row);
+    if(i!==idx) return;
+    const [a,b]=inputPairs[i];
+    const inputs=row.querySelectorAll("input");
+    if(+inputs[0].value===a && +inputs[1].value===b){
+      inputs.forEach(x=>x.disabled=true);
+      row.querySelector(".decode").textContent=`[${a} | ${b}]`;
+      const [x,y]=decodedPairs[i];
+      decodedText.textContent+=`[${x} | ${y}] `;
+      idx++;
+      if(pairs.children[idx]) pairs.children[idx].querySelectorAll("input").forEach(x=>x.disabled=false);
+      else verify.disabled=false;
     }
   };
 
-  // clock
-  setInterval(()=>document.getElementById("clock")?.textContent = new Date().toLocaleTimeString("en-GB"),1000);
+  /* VIDEO & SECOND GLYPH GATE */
+verify.onclick = () => {
+  const log = document.getElementById("log") || console;
 
-  // ===== GLYPHGATE 1 =====
-  function initGlyphGate1(){
-    const glyphGate = document.getElementById("glyphGate");
-    const glyphsDiv = document.getElementById("glyphs");
-    const inputText = document.getElementById("inputText");
-    const backspace = document.getElementById("backspace");
-    const glyphVerify = document.getElementById("glyphVerify");
+  // Get current time
+  const now = new Date();
+  const hours = now.getHours();     // 0–23
+  const minutes = now.getMinutes(); // 0–59
+  const totalMinutes = hours * 60 + minutes;
 
-    glyphGate.classList.remove("hidden");
+  // Allowed time window: 19:43 (1183) -> 20:26 (1226)
+  if (totalMinutes >= 1183 && totalMinutes <= 1226) {
+    // Sequence verified and time within window -> play video
+    log.textContent = "ACCESS GRANTED";
 
-    const glyphOrder = [
-      "𒌋𒌋𒈫","𒈫","𒐎","𒌋𒐊","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒃻","𒌋𒌋","𒃻",
-      "𒌋𒌋𒈫","𒈫","𒌋𒌋𒐊","𒌋𒌋𒐊","𒌋𒐊","𒐎","𒌋𒈫","𒌋𒈫",
-      "𒌋𒈫","𒌋𒈫","𒁹","𒌋𒌋𒁹","𒐊","𒌋𒐎","𒌋𒐊","𒐎","𒐎",
-      "𒌋𒐊","𒐋","𒌋𒃻","𒌋𒌋𒁹","𒁹","𒐎","𒌋𒐊","𒐋",
-      "𒌋𒃻","𒌋𒃻","𒐋","𒁹","𒌋𒌋𒁹","𒐋","𒌋𒐍",
-      "𒌋𒐎","𒐊","𒌋𒁹","𒌋𒐈","𒌋𒁹","𒌋𒐈",
-      "𒌋𒌋𒐈","𒁹","𒌋𒌋","𒃻","𒐋","𒌋𒃻",
-      "𒌋𒐎","𒐊","𒐊","𒌋𒐎","𒐊","𒌋𒐎"
-    ];
+    video.style.display = "block";
+    video.style.opacity = 0;
 
-    let attempt = [];
-    let used = [];
-    glyphsDiv.innerHTML = "";
-    inputText.textContent = "";
+    // Set video source properly
+    video.src = "the_hallway.mp4";
+    video.load();
+    video.volume = 1;
 
-    glyphOrder.slice().sort(()=>Math.random()-.5).forEach(g=>{
-      const d = document.createElement("div");
-      d.className = "glyph";
-      d.textContent = g;
-      glyphsDiv.appendChild(d);
-    });
-
-    glyphsDiv.onclick = e=>{
-      if(!e.target.classList.contains("glyph")) return;
-      e.target.classList.add("used");
-      attempt.push(e.target.textContent);
-      used.push(e.target);
-      inputText.textContent = attempt.join(" | ");
-    };
-    backspace.onclick = ()=>{
-      if(!attempt.length) return;
-      attempt.pop();
-      used.pop().classList.remove("used");
-      inputText.textContent = attempt.join(" | ");
-    };
-    glyphVerify.onclick = ()=>{
-      if(attempt.join() !== glyphOrder.join()){
-        attempt=[]; used.forEach(u=>u.classList.remove("used")); used=[]; inputText.textContent="";
-      } else {
-        glyphGate.classList.add("hidden");
-        initTerminal();
-      }
-    };
-  }
-
-  // ===== NUMERIC TERMINAL =====
-  function initTerminal(){
-    const terminal = document.getElementById("terminal");
-    const pairsDiv = document.getElementById("pairs");
-    const decodedText = document.getElementById("decodedText");
-    const verifyBtn = document.getElementById("verify");
-    terminal.classList.remove("hidden");
-
-    const inputPairs = [[22,2],[9,15],[1,21],[6,14],[20,4],[22,2],[25,25],[15,9],[12,12],[12,12],[1,21],[5,19],[15,9],[9,15],[6,14],[21,1],[9,15],[6,14],[14,6],[1,21],[6,18],[19,5],[11,13],[11,13],[23,1],[20,4],[6,14],[19,5],[5,19],[5,19]];
-    const decodedPairs = [[4,24],[17,11],[23,5],[16,12],[6,22],[4,24],[1,1],[11,17],[14,14],[14,14],[23,5],[21,7],[11,17],[17,11],[16,12],[5,23],[17,11],[16,12],[12,16],[23,5],[20,8],[7,21],[6,22],[8,20],[20,8],[17,11],[15,13],[15,13],[3,25],[6,22]];
-
-    let idx=0;
-    pairsDiv.innerHTML="";
-    inputPairs.forEach((_,i)=>{
-      pairsDiv.innerHTML += `<div class="pair"><span>PAIR ${String(i+1).padStart(2,"0")}:</span><input type="number" disabled><input type="number" disabled><span class="decode">[locked]</span></div>`;
-    });
-    pairsDiv.children[0].querySelectorAll("input").forEach(x=>x.disabled=false);
-
-    pairsDiv.oninput = e=>{
-      const row = e.target.closest(".pair");
-      const i = [...pairsDiv.children].indexOf(row);
-      if(i!==idx) return;
-      const [a,b]=inputPairs[i];
-      const inputs=row.querySelectorAll("input");
-      if(+inputs[0].value===a && +inputs[1].value===b){
-        inputs.forEach(x=>x.disabled=true);
-        row.querySelector(".decode").textContent=`[${a} | ${b}]`;
-        const [x,y]=decodedPairs[i];
-        decodedText.textContent += `[${x} | ${y}] `;
-        idx++;
-        if(pairsDiv.children[idx]) pairsDiv.children[idx].querySelectorAll("input").forEach(x=>x.disabled=false);
-        else verifyBtn.disabled=false;
-      }
-    };
-
-    verifyBtn.onclick = ()=>{
+    video.onended = () => {
+      video.style.display = "none";
       terminal.classList.add("hidden");
-      initGlyphGate2();
+      gate2.classList.remove("hidden");
+
+      attempt = [];
+      used = [];
+      glyphsDiv2.innerHTML = "";
+      glyphOrder2.slice().sort(() => Math.random() - 0.5).forEach(g => {
+        const d = document.createElement("div");
+        d.className = "glyph";
+        d.textContent = g;
+        glyphsDiv2.appendChild(d);
+      });
     };
+
+    video.play().catch(err => console.error("Video play failed:", err));
+    setTimeout(() => video.style.opacity = 1, 50);
+
+  } else {
+    // Outside time window -> pretend nothing happens
+    log.textContent = "ACCESS DENIED"; // subtle, optional
   }
+};
 
-  // ===== GLYPHGATE 2 =====
-  function initGlyphGate2(){
-    const gate2 = document.getElementById("glyphGate2");
-    const glyphsDiv2 = document.getElementById("glyphs2");
-    const inputText2 = document.getElementById("inputText2");
-    const backspace2 = document.getElementById("backspace2");
-    const glyphVerify2 = document.getElementById("glyphVerify2");
-    const warningMessage = document.getElementById("warningMessage");
-    const translationTable = document.getElementById("translationTable");
 
-    gate2.classList.remove("hidden");
 
-    const glyphOrder2 = [
-      "𒃻","𒌋𒌋𒃻","𒌋𒐌","𒌋𒁹","𒌋𒌋𒐈","𒐊","𒌋𒐋","𒌋𒈫","𒐋","𒌋𒌋𒈫",
-      "𒃻","𒌋𒌋𒃻","𒁹","𒁹","𒌋𒁹","𒌋𒐌","𒌋𒃻","𒌋𒃻","𒌋𒌋𒐈","𒐊",
-      "𒌋𒌋𒁹","𒐌","𒌋𒁹","𒌋𒐌","𒌋𒐌","𒌋𒁹","𒌋𒐋","𒌋𒈫","𒐊","𒌋𒌋𒐈",
-      "𒌋𒐌","𒌋𒐋","𒌋𒈫","𒌋𒈫","𒌋𒐋","𒌋𒌋𒐈","𒐊","𒌋𒌋","𒐍","𒐌",
-      "𒌋𒌋𒁹","𒐋","𒌋𒌋𒈫","𒐍","𒌋𒌋","𒐍","𒌋𒐌","𒌋𒁹","𒌋𒐊","𒌋𒐈",
-      "𒌋𒐊","𒌋𒐈","𒐈","𒌋𒌋𒐊","𒐋","𒌋𒌋𒈫","𒌋𒐋","𒌋𒈫","𒐌",
-      "𒌋𒌋𒁹","𒌋𒌋𒁹","𒐌"
-    ];
-
-    let attempt = [];
-    let used = [];
-    glyphsDiv2.innerHTML="";
+  /* GLYPH GATE 2 */
+  glyphsDiv2.onclick=e=>{
+    if(!e.target.classList.contains("glyph")) return;
+    e.target.classList.add("used");
+    attempt.push(e.target.textContent);
+    used.push(e.target);
+    inputText2.textContent=attempt.join(" | ");
+  };
+  backspace2.onclick=()=>{
+    if(!attempt.length) return;
+    attempt.pop();
+    used.pop().classList.remove("used");
+    inputText2.textContent=attempt.join(" | ");
+  };
+  glyphVerify2.onclick=()=>{
+    if(attempt.join()!=glyphOrder2.join()) resetGlyphs2();
+    else showTranslation();
+  };
+  function resetGlyphs2(){
+    attempt=[]; used=[];
     inputText2.textContent="";
-
-    glyphOrder2.slice().sort(()=>Math.random()-.5).forEach(g=>{
-      const d=document.createElement("div");
-      d.className="glyph";
-      d.textContent=g;
-      glyphsDiv2.appendChild(d);
-    });
-
-    glyphsDiv2.onclick=e=>{
-      if(!e.target.classList.contains("glyph")) return;
-      e.target.classList.add("used");
-      attempt.push(e.target.textContent);
-      used.push(e.target);
-      inputText2.textContent = attempt.join(" | ");
-    };
-    backspace2.onclick=()=>{
-      if(!attempt.length) return;
-      attempt.pop();
-      used.pop().classList.remove("used");
-      inputText2.textContent = attempt.join(" | ");
-    };
-    glyphVerify2.onclick=()=>{
-      if(attempt.join() !== glyphOrder2.join()){
-        attempt=[]; used.forEach(u=>u.classList.remove("used")); used=[]; inputText2.textContent="";
-      } else {
-        // Show warning & translation table
-        const msg="WARNING FUNCTION COLLAPSE INITIALIZED\nSUBJECT STATUS: SIGNAL LOST";
-        let i=0;
-        warningMessage.textContent="";
-        const interval=setInterval(()=>{
-          warningMessage.textContent += msg[i];
-          i++;
-          if(i>=msg.length){
-            clearInterval(interval);
-            translationTable.classList.remove("hidden");
-          }
-        },50);
+    [...glyphsDiv2.children].forEach(g=>g.classList.remove("used"));
+  }
+  function showTranslation(){
+    let msg="WARNING FUNCTION COLLAPSE INITIALIZED\nSUBJECT STATUS: SIGNAL LOST";
+    let i=0;
+    warningMessage.textContent="";
+    const interval=setInterval(()=>{
+      warningMessage.textContent+=msg[i];
+      i++;
+      if(i>=msg.length){
+        clearInterval(interval);
+        translationTable.classList.remove("hidden");
       }
-    };
+    },50);
   }
 
-});
+})();
 </script>
+
 </body>
 </html>
