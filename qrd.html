@@ -2,229 +2,239 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>ARCHIVE ACCESS NODE</title>
+
 <style>
+/* ================= BASE ================= */
 html, body {
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  background:#050505;
-  color:#00ffcc;
-  font-family:monospace;
-  overflow:hidden; /* no scrolling */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #050505;
+  color: #00ffcc;
+  font-family: monospace;
+  overflow: hidden;
 }
 
-/* Wrapper scales all content to fit mobile screen */
-#appWrapper {
-  width:1080px;      /* design width */
-  height:1920px;     /* design height */
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1080)); /* scale to fit viewport width */
+.hidden { display: none }
+
+/* ================= LAYOUT ================= */
+.section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* --- Original CSS tweaks for scaling --- */
-.section{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100%;
-  width:100%;
-}
-.box{
-  border:1px solid #00ffcc;
-  padding:24px;
-  max-width:720px;
-  width:90%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.hidden{display:none}
-
-/* Keyboard */
-.keyboard{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  margin-top:12px;
-  max-width:100%;
-}
-.keyboard-row{
-  display:flex;
-  gap:6px;
-  justify-content:center;
-}
-.key{
-  border:1px solid #00ffcc;
-  padding:10px 14px;
-  min-width:40px;
-  text-align:center;
-  cursor:pointer;
-  user-select:none;
-}
-.key:hover{background:#003333}
-.key-space{
-  min-width:260px;
+.box {
+  width: 92vw;
+  max-width: 720px;
+  max-height: 92vh;
+  padding: 16px;
+  border: 1px solid #00ffcc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Glyphs */
-.glyphs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  justify-content:center;
-}
-.glyph{
-  border:1px solid #00ffcc;
-  padding:5px 7px;
-  cursor:pointer;
-}
-.glyph.used{opacity:.25;pointer-events:none}
-
-#inputLog,#inputLog2{
-  margin-top:6px;
-  border-top:1px dashed #00ffcc;
-  padding-top:5px;
-  font-size:.8em;
+/* ================= KEYBOARD ================= */
+.keyboard {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
 }
 
-/* Controls */
-button{
-  padding:8px;
-  background:#00ffcc;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+.keyboard-row {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 6px;
 }
 
-/* Numeric terminal */
-#clock{margin-bottom:6px;font-weight:bold}
-.pair{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-bottom:4px;
-  flex-wrap:wrap;
-}
-.pair span{width:70px}
-input{
-  width:44px;
-  background:black;
-  color:#00ffcc;
-  border:1px solid #00ffcc;
-  text-align:center;
-}
-input:disabled{opacity:.35}
-.decode{margin-left:8px}
-
-/* Access screen */
-#accessGranted{
-  font-size:2em;
-  font-weight:bold;
-  margin-bottom:12px;
-}
-#gibberish{
-  width:80%;
-  max-width:720px;
-  height:55vh;
-  border:1px solid #00ffcc;
-  padding:10px;
-  overflow-y:auto;
-  font-size:.85em;
+.key {
+  min-width: 34px;
+  padding: 8px 0;
+  border: 1px solid #00ffcc;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9em;
 }
 
-/* Video */
-#unlockVideo{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  display:none;
-  background:black;
-  z-index:9999;
-  object-fit:cover;
+.key:hover { background:#003333 }
+
+.key-space {
+  grid-column: span 5;
+  min-width: 180px;
 }
 
-/* Warning & Table */
-#warningMessage{
-  margin-top:12px;
-  font-weight:bold;
-  color:#ff4444;
-  white-space:pre;
-  text-align:center;
+/* ================= GLYPHS ================= */
+.glyphs {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  gap: 6px;
+  justify-items: center;
 }
-table{
-  margin-top:12px;
-  border-collapse:collapse;
+
+.glyph {
+  border: 1px solid #00ffcc;
+  padding: 6px;
+  font-size: 1.1em;
+  cursor: pointer;
 }
-table,th,td{
-  border:1px solid #00ffcc;
-  padding:6px;
+
+.glyph.used {
+  opacity: .25;
+  pointer-events: none;
+}
+
+/* ================= TERMINAL ================= */
+#clock { font-weight: bold }
+
+#pairs {
+  width: 100%;
+  display: grid;
+  gap: 4px;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 70px 48px 48px auto;
+  align-items: center;
+}
+
+input {
+  width: 44px;
+  background: black;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+  text-align: center;
+}
+
+input:disabled { opacity: .35 }
+
+.decode { margin-left: 6px }
+
+/* ================= ACCESS SCREEN ================= */
+#accessGranted {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#gibberish {
+  width: 100%;
+  height: 45vh;
+  max-height: 420px;
+  border: 1px solid #00ffcc;
+  padding: 8px;
+  overflow-y: auto;
+  font-size: .8em;
+}
+
+/* ================= VIDEO ================= */
+#unlockVideo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: none;
+  z-index: 9999;
+  object-fit: cover;
+}
+
+/* ================= TABLE ================= */
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #00ffcc;
+  padding: 6px;
+}
+
+#warningMessage {
+  white-space: pre;
+  color: #ff4444;
+  font-weight: bold;
+  text-align: center;
 }
 </style>
 </head>
+
 <body>
-<div id="appWrapper">
 
 <!-- PASSWORD GATE -->
 <div id="passwordGate" class="section">
   <div class="box">
     <h3>ENTER ACCESS PASSWORD</h3>
-    <div id="pwDisplay" style="min-height:24px;margin-bottom:6px"></div>
-    <div class="keyboard" id="keyboard"></div>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <div id="pwDisplay"></div>
+    <div id="keyboard" class="keyboard"></div>
+    <div style="display:flex; gap:8px">
       <button id="pwBack">BACKSPACE</button>
       <button id="pwEnter">ENTER</button>
     </div>
-    <div id="pwWarn" style="margin-top:8px;color:#ff4444"></div>
+    <div id="pwWarn" style="color:#ff4444"></div>
   </div>
 </div>
 
-<!-- ACCESS GRANTED -->
-<div id="accessScreen" class="section hidden" style="flex-direction:column">
-  <div id="accessGranted">ACCESS GRANTED</div>
-  <div id="gibberish"></div>
+<!-- ACCESS -->
+<div id="accessScreen" class="section hidden">
+  <div class="box">
+    <div id="accessGranted">ACCESS GRANTED</div>
+    <div id="gibberish"></div>
+  </div>
 </div>
 
-<!-- FIRST GLYPH GATE -->
+<!-- GLYPH GATE 1 -->
 <div id="glyphGate" class="section hidden">
   <div class="box">
     <h3>SEQUENCE ALIGNMENT REQUIRED</h3>
-    <div class="glyphs" id="glyphs"></div>
-    <div id="inputLog"><strong>INPUT:</strong> <span id="inputText"></span></div>
-    <div class="glyph-controls">
+    <div id="glyphs" class="glyphs"></div>
+    <div><strong>INPUT:</strong> <span id="inputText"></span></div>
+    <div>
       <button id="backspace">BACKSPACE</button>
-      <button id="glyphVerify">VERIFY SEQUENCE</button>
+      <button id="glyphVerify">VERIFY</button>
     </div>
   </div>
 </div>
 
-<!-- NUMERIC TERMINAL -->
+<!-- TERMINAL -->
 <div id="terminal" class="section hidden">
   <div class="box">
     <h3>ARCHIVE ACCESS TERMINAL</h3>
     <div id="clock"></div>
     <div id="pairs"></div>
-    <div id="decodedBox"><strong>DECODED OUTPUT:</strong> <span id="decodedText"></span></div>
+    <div><strong>DECODED:</strong> <span id="decodedText"></span></div>
     <button id="verify" disabled>VERIFY SEQUENCE</button>
   </div>
 </div>
 
-<!-- SECOND GLYPH GATE -->
+<!-- GLYPH GATE 2 -->
 <div id="glyphGate2" class="section hidden">
   <div class="box">
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
-    <div class="glyphs" id="glyphs2"></div>
-    <div id="inputLog2"><strong>INPUT:</strong> <span id="inputText2"></span></div>
-    <div class="glyph-controls">
+    <div id="glyphs2" class="glyphs"></div>
+    <div><strong>INPUT:</strong> <span id="inputText2"></span></div>
+    <div>
       <button id="backspace2">BACKSPACE</button>
-      <button id="glyphVerify2">VERIFY SEQUENCE</button>
+      <button id="glyphVerify2">VERIFY</button>
     </div>
     <div id="warningMessage"></div>
     <div id="translationTable" class="hidden">
+      <!-- table unchanged -->
+    </div>
+  </div>
+</div>
+
+<video id="unlockVideo" playsinline></video>
       <table>
         <thead><tr><th>Letter</th><th>Number</th></tr></thead>
         <tbody>
@@ -510,5 +520,6 @@ verify.onclick = () => {
 
 </body>
 </html>
+
 
 
