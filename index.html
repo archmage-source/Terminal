@@ -50,11 +50,11 @@ html, body {
     inset:0;
     background:black;
     color:#00ff66;
-    display:none; /* hidden at launch */
+    display:none;
     padding:20px;
     box-sizing:border-box;
     text-shadow:0 0 8px rgba(0,255,100,0.6);
-    z-index:5;
+    z-index:3;
     overflow-y: auto;
 }
 
@@ -102,45 +102,19 @@ html, body {
     padding:20px;
     z-index:3;
     overflow:hidden;
-
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
 }
 
 .desktop-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 80px;
-    height: 100px;
-    margin: 20px;
-    text-align: center;
-    cursor: pointer;
+    display:inline-block;
+    width:80px;
+    height:100px;
+    margin:20px;
+    text-align:center;
+    cursor:pointer;
 }
 
-.desktop-icon .icon {
-    font-size: 48px;
-}
-
-#qrd-icon {
-    margin-top: 30px; /* slightly lower to align with Checkmate */
-}
-
-#qrd-icon .icon {
-    animation: float 1.5s ease-in-out infinite alternate;
-}
-
-.desktop-icon .label {
-    font-size: 16px;
-    margin-top: 6px;
-}
-
-@keyframes float {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-5px); }
-}
+.desktop-icon .icon { font-size:48px; }
+.desktop-icon .label { font-size:16px; margin-top:6px; }
 
 iframe {
     display:none;
@@ -252,7 +226,7 @@ const bootSteps=[
 
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
-// Computer trigger zone
+// Terminal trigger zone
 let computerZone = { x1:0.52, x2:0.68, y1:0.26, y2:0.46 };
 
 function inZone(x, y, zone){
@@ -260,7 +234,6 @@ function inZone(x, y, zone){
     return x >= w*zone.x1 && x <= w*zone.x2 && y >= h*zone.y1 && y <= h*zone.y2;
 }
 
-// Lobby click triggers
 lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
@@ -281,7 +254,7 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
-    // Terminal (computer)
+    // Terminal
     if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
@@ -290,14 +263,12 @@ lobby.addEventListener("click", e=>{
     }
 });
 
-// Terminal close clears password anytime
 terminalClose.onclick = ()=>{
     terminal.style.display="none";
     passwordInput.value="";
     inTerminal=false;
 };
 
-// Password login
 loginBtn.onclick = ()=>{
     if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
         startBootSequence();
@@ -306,7 +277,6 @@ loginBtn.onclick = ()=>{
     }
 };
 
-// Boot sequence
 function startBootSequence(){
     terminal.style.display="none";
     inTerminal=false;
@@ -322,7 +292,7 @@ function startBootSequence(){
         } else {
             setTimeout(()=>{
                 bootScreen.style.display="none";
-                desktop.style.display="flex";
+                desktop.style.display="block";
                 desktop.focus();
             },500);
         }
@@ -330,13 +300,13 @@ function startBootSequence(){
     nextStep();
 }
 
-// Iframes open only when icon clicked
 qrdIcon.onclick = ()=>{
     qrdFrame.src="qrd.html";
     qrdFrame.style.display="block";
     inIframe=true;
     mobileBack.style.display="block";
 };
+
 checkmateIcon.onclick = ()=>{
     checkmateFrame.src="cypher_chess_user_index.html";
     checkmateFrame.style.display="block";
@@ -344,7 +314,6 @@ checkmateIcon.onclick = ()=>{
     mobileBack.style.display="block";
 };
 
-// Back button
 mobileBack.onclick = ()=>{
     lobby.style.backgroundImage=`url("${originalLobby}")`;
     inHallway=false;
@@ -361,12 +330,10 @@ mobileBack.onclick = ()=>{
     mobileBack.style.display="none";
 };
 
-// Escape key
 document.addEventListener("keydown", e=>{
     if(e.key==="Escape") mobileBack.click();
 });
 
-// Music
 function startMusic(){
     if(!musicStarted){
         bgMusic.play().catch(()=>{});
