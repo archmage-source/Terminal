@@ -8,24 +8,27 @@
 body {
   margin:0; padding:0;
   background:#050505; color:#00ffcc;
-  font-family:monospace; overflow:hidden;
-  height:100vh; width:100vw;
+  font-family:monospace;
+  height:auto; width:100%;
 }
 .section {
-  display:flex; justify-content:center; align-items:center;
-  height:100vh; width:100%;
+  display:flex; justify-content:center; align-items:flex-start;
+  min-height:100vh; width:100%;
   box-sizing:border-box; padding:2vh 2vw;
 }
 .box {
   border:1px solid #00ffcc; padding:2vh 2vw;
   width:96%; max-width:600px; display:flex;
   flex-direction:column; align-items:center;
-  height:90vh; box-sizing:border-box; overflow:hidden;
+  box-sizing:border-box; overflow:hidden;
 }
 .box-scroll { overflow-y:auto; width:100%; }
 
 /* ===== KEYBOARD ===== */
-.keyboard { display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; min-height:30vh; }
+.keyboard {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  width:100%; min-height:200px; max-height:40vh; overflow-y:auto;
+}
 .keyboard-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; width:100%; }
 .key {
   border:1px solid #00ffcc; background:#000; color:#00ffcc;
@@ -50,7 +53,7 @@ input:disabled { opacity:0.35; }
 .decode { margin-left:2vw; font-size:3.5vw; }
 
 /* ===== ACCESS SCREEN ===== */
-#accessScreen { display:flex; flex-direction:column; justify-content:flex-start; align-items:center; height:100%; width:100%; box-sizing:border-box; padding:2vh 2vw; }
+#accessScreen { display:flex; flex-direction:column; justify-content:flex-start; align-items:center; width:100%; box-sizing:border-box; padding:2vh 2vw; }
 #accessGranted { font-size:6vw; font-weight:bold; margin-bottom:2vh; text-align:center; }
 #gibberish { width:100%; max-width:600px; height:55vh; border:1px solid #00ffcc; padding:1vh 1vw; overflow-y:auto; font-size:3.5vw; box-sizing:border-box; }
 #unlockVideo { position:fixed; inset:0; width:100%; height:100%; display:none; background:black; z-index:9999; }
@@ -60,6 +63,7 @@ input:disabled { opacity:0.35; }
 table { margin-top:1vh; border-collapse:collapse; width:100%; font-size:3.5vw; }
 table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; }
 .hidden { display:none; }
+#pwDisplay { min-height:32px; font-size:5vw; }
 </style>
 </head>
 <body>
@@ -68,7 +72,7 @@ table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; 
 <div id="passwordGate" class="section">
   <div class="box">
     <h3>ENTER ACCESS PASSWORD</h3>
-    <div id="pwDisplay" style="min-height:24px;margin-bottom:6px"></div>
+    <div id="pwDisplay"></div>
     <div class="keyboard" id="keyboard"></div>
     <div style="display:flex;gap:8px;margin-top:10px">
       <button id="pwBack">BACKSPACE</button>
@@ -150,14 +154,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const accessScreen = document.getElementById("accessScreen");
   const gibberish = document.getElementById("gibberish");
 
+  // build keyboard
   const keyboardLayout = [
     ["Q","W","E","R","T","Y","U","I","O","P"],
     ["A","S","D","F","G","H","J","K","L"],
     ["Z","X","C","V","B","N","M"],
     [" "]
   ];
-
-  // build keyboard
   const keyboard = document.getElementById("keyboard");
   keyboardLayout.forEach(row=>{
     const r = document.createElement("div");
@@ -198,8 +201,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   };
 
-  // clock
   setInterval(()=>document.getElementById("clock")?.textContent = new Date().toLocaleTimeString("en-GB"),1000);
+
 
 
 // ===== GLYPHGATE 1 =====
@@ -369,5 +372,6 @@ function initGlyphGate2(){
 </script>
 </body>
 </html>
+
 
 
