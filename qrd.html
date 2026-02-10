@@ -39,6 +39,7 @@ body {
   overflow-y: auto;
   width: 100%;
 }
+/* ===== KEYBOARD ===== */
 .keyboard {
   display: flex;
   flex-direction: column;
@@ -56,20 +57,25 @@ body {
 }
 .key {
   border: 1px solid #00ffcc;
-  background: black;
+  background: #000;
   color: #00ffcc;
-  padding: 2vw 3vw;
+  padding: 1.5vh 2vw;
   min-width: 12vw;
-  flex: 1 0 auto;
   text-align: center;
   cursor: pointer;
   user-select: none;
   font-size: 4vw;
   border-radius: 6px;
-  transition: background 0.2s;
+  flex: 1 0 auto;
 }
-.key:hover { background: #003333; }
-.key-space { flex: 2 0 40%; min-width: 40%; }
+.key-space { 
+  flex: 2 0 40%; 
+  min-width: 40%; 
+}
+.key:hover { 
+  background: #003333; 
+}
+/* ===== GLYPHS ===== */
 .glyphs {
   display: flex;
   flex-wrap: wrap;
@@ -221,6 +227,7 @@ table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: cente
 <video id="unlockVideo" playsinline></video>
 
 <script>
+// ==== FULL LOGIC ====
 (() => {
 const PASSWORD = "GLYPHGATE";
 let pw = [];
@@ -454,3 +461,4 @@ function initGlyphGate2(){
 </script>
 </body>
 </html>
+
