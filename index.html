@@ -274,17 +274,22 @@ loginBtn.onclick = () => {
     if (passwordInput.value.trim().toUpperCase() === "NOEXITFEE") {
         startBootSequence();
     } else {
-        // Flash DENIED in red
-        const originalColor = terminalText.style.color;
-        terminalText.textContent += "\nACCESS DENIED";
+        // Store current text
+        const originalText = terminalText.textContent;
+        // Show DENIED briefly
+        terminalText.textContent = "ACCESS DENIED";
         terminalText.style.color = "red";
+
         setTimeout(() => {
-            terminalText.style.color = originalColor || "#00ff66";
+            terminalText.textContent = originalText;
+            terminalText.style.color = "#00ff66";
         }, 700);
+
         passwordInput.value = "";
         passwordInput.focus();
     }
 };
+
 
 function startBootSequence(){
     terminal.style.display="none";
@@ -355,3 +360,4 @@ document.addEventListener("keydown", startMusic,{once:true});
 
 </body>
 </html>
+
