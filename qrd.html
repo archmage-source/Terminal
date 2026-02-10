@@ -166,6 +166,70 @@ table, th, td {
   font-weight: bold;
   text-align: center;
 }
+<style>
+  /* your existing CSS above */
+
+  /* ===== MOBILE COMPACT MODE ===== */
+  .box {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .keyboard {
+    gap: 4px;
+  }
+
+  .keyboard-row {
+    gap: 4px;
+  }
+
+  .key {
+    min-width: 30px;
+    padding: 6px 0;
+    font-size: 0.8em;
+  }
+
+  .key-space {
+    min-width: 150px;
+  }
+
+  .glyphs {
+    gap: 4px;
+  }
+
+  .glyph {
+    padding: 4px;
+    font-size: 1em;
+  }
+
+  h3 {
+    margin: 4px 0;
+    font-size: 1em;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 0.75em;
+  }
+
+  #pairs {
+    gap: 3px;
+  }
+
+  .pair {
+    grid-template-columns: 64px 42px 42px auto;
+  }
+
+  input {
+    width: 40px;
+    font-size: 0.75em;
+  }
+
+  #gibberish {
+    height: 40vh;
+    max-height: 360px;
+    font-size: 0.7em;
+  }
 </style>
 </head>
 
@@ -520,6 +584,7 @@ verify.onclick = () => {
 
 </body>
 </html>
+
 
 
 
