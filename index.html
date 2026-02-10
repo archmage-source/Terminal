@@ -235,8 +235,9 @@ const bootSteps=[
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
 // Terminal trigger zone based on image-relative coordinates
-const computerZone = { x1:0.43, x2:0.57, y1:0.42, y2:0.58 };
+let computerZone = { x1:0.43, x2:0.57, y1:0.52, y2:0.68 };
 
+// Function to check if click is in a zone
 function inZone(x, y, zone){
     const w = window.innerWidth, h = window.innerHeight;
     return x >= w*zone.x1 && x <= w*zone.x2 && y >= h*zone.y1 && y <= h*zone.y2;
@@ -354,8 +355,30 @@ function startMusic(){
 }
 document.addEventListener("click", startMusic,{once:true});
 document.addEventListener("keydown", startMusic,{once:true});
+
+// --- DEBUG: visual overlay for trigger zones ---
+const ZONES_DEBUG = {
+    TERMINAL: computerZone,
+    HALLWAY: {x1:0, x2:0.35, y1:0.2, y2:0.9},
+    DIARY: {x1:0.65, x2:0.95, y1:0.5, y2:0.8}
+};
+
+for (const key in ZONES_DEBUG) {
+    const z = ZONES_DEBUG[key];
+    const overlay = document.createElement("div");
+    overlay.style.position = "absolute";
+    overlay.style.left = `${z.x1*100}%`;
+    overlay.style.top = `${z.y1*100}%`;
+    overlay.style.width = `${(z.x2-z.x1)*100}%`;
+    overlay.style.height = `${(z.y2-z.y1)*100}%`;
+    overlay.style.border = "2px dashed red";
+    overlay.style.backgroundColor = "rgba(255,0,0,0.1)";
+    overlay.style.pointerEvents = "none";
+    overlay.style.zIndex = "1000";
+    overlay.title = key;
+    document.body.appendChild(overlay);
+}
 </script>
 
 </body>
 </html>
-
