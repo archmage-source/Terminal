@@ -269,11 +269,20 @@ terminalClose.onclick = ()=>{
     inTerminal=false;
 };
 
-loginBtn.onclick = ()=>{
-    if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
+loginBtn.onclick = () => {
+    const terminalText = document.getElementById("terminal-text");
+    if (passwordInput.value.trim().toUpperCase() === "NOEXITFEE") {
         startBootSequence();
     } else {
-        passwordInput.value="";
+        // Flash DENIED in red
+        const originalColor = terminalText.style.color;
+        terminalText.textContent += "\nACCESS DENIED";
+        terminalText.style.color = "red";
+        setTimeout(() => {
+            terminalText.style.color = originalColor || "#00ff66";
+        }, 700);
+        passwordInput.value = "";
+        passwordInput.focus();
     }
 };
 
