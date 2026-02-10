@@ -229,16 +229,12 @@ const bootSteps=[
     "SYSTEM READY"
 ];
 
-// Trigger zones for this specific image
-const ZONES = {
-    HALLWAY: { x1:0, x2:0.35, y1:0.2, y2:0.9 },  // Vault door
-    TERMINAL: { x1:0.4, x2:0.6, y1:0.5, y2:0.7 }, // Computer
-    DIARY: { x1:0.65, x2:0.95, y1:0.5, y2:0.8 }   // Desk
-};
+// Terminal trigger zone based on image-relative coordinates
+const computerZone = { x1:0.43, x2:0.57, y1:0.52, y2:0.68 }; // Adjusted to match computer visually
 
 function inZone(x, y, zone){
-    const w=window.innerWidth, h=window.innerHeight;
-    return x>=w*zone.x1 && x<=w*zone.x2 && y>=h*zone.y1 && y<=h*zone.y2;
+    const w = window.innerWidth, h = window.innerHeight;
+    return x >= w*zone.x1 && x <= w*zone.x2 && y >= h*zone.y1 && y <= h*zone.y2;
 }
 
 // Lobby click triggers
@@ -246,19 +242,21 @@ lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
-    if(inZone(x,y,ZONES.HALLWAY)){
+    // Hallway and diary zones (keep old logic)
+    if(inZone(x,y,{x1:0, x2:0.35, y1:0.2, y2:0.9})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
         mobileBack.style.display="block";
         return;
     }
-    if(inZone(x,y,ZONES.DIARY)){
+    if(inZone(x,y,{x1:0.65, x2:0.95, y1:0.5, y2:0.8})){
         lobby.style.backgroundImage = `url("${diaryImage}")`;
         inDiary=true;
         mobileBack.style.display="block";
         return;
     }
-    if(inZone(x,y,ZONES.TERMINAL)){
+    // Terminal trigger
+    if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
         requestAnimationFrame(()=>passwordInput.focus());
