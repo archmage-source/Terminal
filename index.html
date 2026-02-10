@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Cypher Room</title>
 
 <style>
@@ -85,6 +85,7 @@ html, body {
     box-sizing:border-box;
     text-shadow:0 0 8px rgba(0,255,100,0.6);
     z-index:3;
+    overflow-y: auto;
 }
 
 #terminal pre { font-size:16px; line-height:1.4; }
@@ -119,6 +120,7 @@ html, body {
     color:#00ff66;
     padding:20px;
     white-space:pre-wrap;
+    overflow-y:auto;
     z-index:3;
 }
 
@@ -131,6 +133,7 @@ html, body {
     color:#00ff66;
     padding:20px;
     z-index:3;
+    overflow:hidden;
 }
 
 .desktop-icon {
@@ -145,7 +148,7 @@ html, body {
 .desktop-icon .icon { font-size:48px; }
 .desktop-icon .label { font-size:16px; margin-top:6px; }
 
-/* IFRAME FULLSCREEN */
+/* IFRAME FULLSCREEN + ZOOM */
 iframe {
     display:none;
     position:fixed;
@@ -154,6 +157,7 @@ iframe {
     height:100%;
     border:none;
     z-index:4;
+    touch-action: pinch-zoom;
 }
 </style>
 </head>
@@ -285,18 +289,43 @@ loginBtn.onclick=()=>{
     }
 };
 
+/* BOOT SEQUENCE WITH LOADING TEXT */
+const bootSteps = [
+    "SYSTEM BOOT INITIATED...",
+    "LOADING MODULES...",
+    "CALIBRATING RESONATOR...",
+    "INITIALIZING NETWORK INTERFACE...",
+    "SECURITY CHECK: OK",
+    "LOADING AI PROTOCOLS...",
+    "SYNCHRONIZING CLOCKS...",
+    "SYSTEM READY"
+];
+
 function startBootSequence(){
     terminal.style.display="none";
     bootScreen.style.display="block";
-    bootScreen.textContent="SYSTEM READY\n";
-    setTimeout(()=>{
-        bootScreen.style.display="none";
-        desktop.style.display="block";
-        desktop.focus();
-    },800);
+    bootScreen.textContent = "";
+    let i = 0;
+
+    function showNextStep(){
+        if(i < bootSteps.length){
+            bootScreen.textContent += bootSteps[i] + "\n";
+            bootScreen.scrollTop = bootScreen.scrollHeight;
+            i++;
+            setTimeout(showNextStep, 700);
+        } else {
+            // After final step, show desktop after small delay
+            setTimeout(()=>{
+                bootScreen.style.display="none";
+                desktop.style.display="block";
+                desktop.focus();
+            }, 500);
+        }
+    }
+    showNextStep();
 }
 
-/* IFRAME FULLSCREEN */
+/* IFRAME FULLSCREEN + ZOOM */
 qrdIcon.onclick=()=>{
     qrdFrame.src="qrd.html";
     qrdFrame.style.display="block";
