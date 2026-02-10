@@ -17,11 +17,10 @@ html, body {
     touch-action: manipulation;
 }
 
-/* LOBBY */
 #lobby {
     position: absolute;
     inset: 0;
-    background: black; /* fallback */
+    background: black;
     background-size: cover;
     background-position: center;
     filter: brightness(1) contrast(1.05);
@@ -29,7 +28,6 @@ html, body {
     cursor: pointer;
 }
 
-/* Flicker + scanlines */
 .flicker { animation: flicker 0.15s infinite alternate; }
 @keyframes flicker { from { opacity:0.98; } to { opacity:1; } }
 
@@ -47,7 +45,6 @@ html, body {
     pointer-events:none;
 }
 
-/* TERMINAL */
 #terminal {
     position: fixed;
     inset:0;
@@ -84,7 +81,6 @@ html, body {
     font-size:18px;
 }
 
-/* BOOT SCREEN */
 #boot-screen {
     display:none;
     position: fixed;
@@ -97,7 +93,6 @@ html, body {
     z-index:3;
 }
 
-/* DESKTOP */
 #desktop {
     display:none;
     position:fixed;
@@ -121,7 +116,6 @@ html, body {
 .desktop-icon .icon { font-size:48px; }
 .desktop-icon .label { font-size:16px; margin-top:6px; }
 
-/* IFRAME 1920x1080 with pinch zoom */
 iframe {
     display:none;
     width:1920px;
@@ -138,7 +132,6 @@ iframe {
     touch-action: pan-x pan-y pinch-zoom;
 }
 
-/* BACK BUTTON */
 #mobile-back {
     display:none;
     position:fixed;
@@ -231,37 +224,37 @@ const bootSteps=[
     "SYSTEM READY"
 ];
 
-// Set lobby background on launch
 lobby.style.backgroundImage = `url("${originalLobby}")`;
 
-// Terminal trigger zone based on image-relative coordinates
+// Terminal zone (unchanged)
 let computerZone = { x1:0.43, x2:0.57, y1:0.52, y2:0.68 };
 
-// Function to check if click is in a zone
 function inZone(x, y, zone){
     const w = window.innerWidth, h = window.innerHeight;
     return x >= w*zone.x1 && x <= w*zone.x2 && y >= h*zone.y1 && y <= h*zone.y2;
 }
 
-// Lobby click triggers
 lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
-    // Hallway and diary zones
-    if(inZone(x,y,{x1:0, x2:0.35, y1:0.2, y2:0.9})){
+    // Hallway (vault door)
+    if(inZone(x,y,{x1:0.02, x2:0.42, y1:0.18, y2:0.88})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
         mobileBack.style.display="block";
         return;
     }
-    if(inZone(x,y,{x1:0.65, x2:0.95, y1:0.5, y2:0.8})){
+
+    // Diary (tight paper trigger)
+    if(inZone(x,y,{x1:0.70, x2:0.86, y1:0.26, y2:0.46})){
         lobby.style.backgroundImage = `url("${diaryImage}")`;
         inDiary=true;
         mobileBack.style.display="block";
         return;
     }
-    // Terminal trigger
+
+    // Terminal
     if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
@@ -270,14 +263,12 @@ lobby.addEventListener("click", e=>{
     }
 });
 
-// Terminal close
 terminalClose.onclick = ()=>{
     terminal.style.display="none";
     passwordInput.value="";
     inTerminal=false;
 };
 
-// Password
 loginBtn.onclick = ()=>{
     if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
         startBootSequence();
@@ -286,7 +277,6 @@ loginBtn.onclick = ()=>{
     }
 };
 
-// Boot sequence
 function startBootSequence(){
     terminal.style.display="none";
     inTerminal=false;
@@ -310,13 +300,13 @@ function startBootSequence(){
     nextStep();
 }
 
-// Iframes
 qrdIcon.onclick = ()=>{
     qrdFrame.src="qrd.html";
     qrdFrame.style.display="block";
     inIframe=true;
     mobileBack.style.display="block";
 };
+
 checkmateIcon.onclick = ()=>{
     checkmateFrame.src="cypher_chess_user_index.html";
     checkmateFrame.style.display="block";
@@ -324,7 +314,6 @@ checkmateIcon.onclick = ()=>{
     mobileBack.style.display="block";
 };
 
-// Back button
 mobileBack.onclick = ()=>{
     lobby.style.backgroundImage=`url("${originalLobby}")`;
     inHallway=false;
@@ -341,12 +330,10 @@ mobileBack.onclick = ()=>{
     mobileBack.style.display="none";
 };
 
-// ESC key
 document.addEventListener("keydown", e=>{
     if(e.key==="Escape") mobileBack.click();
 });
 
-// Music
 function startMusic(){
     if(!musicStarted){
         bgMusic.play().catch(()=>{});
@@ -356,11 +343,11 @@ function startMusic(){
 document.addEventListener("click", startMusic,{once:true});
 document.addEventListener("keydown", startMusic,{once:true});
 
-// --- DEBUG: visual overlay for trigger zones ---
+// DEBUG overlays
 const ZONES_DEBUG = {
     TERMINAL: computerZone,
-    HALLWAY: {x1:0, x2:0.35, y1:0.2, y2:0.9},
-    DIARY: {x1:0.65, x2:0.95, y1:0.5, y2:0.8}
+    HALLWAY: {x1:0.02, x2:0.42, y1:0.18, y2:0.88},
+    DIARY: {x1:0.70, x2:0.86, y1:0.26, y2:0.46}
 };
 
 for (const key in ZONES_DEBUG) {
@@ -375,12 +362,9 @@ for (const key in ZONES_DEBUG) {
     overlay.style.backgroundColor = "rgba(255,0,0,0.1)";
     overlay.style.pointerEvents = "none";
     overlay.style.zIndex = "1000";
-    overlay.title = key;
     document.body.appendChild(overlay);
 }
 </script>
 
 </body>
 </html>
-
-
