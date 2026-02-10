@@ -54,7 +54,7 @@ html, body {
     padding:20px;
     box-sizing:border-box;
     text-shadow:0 0 8px rgba(0,255,100,0.6);
-    z-index:3;
+    z-index:5; /* above everything */
     overflow-y: auto;
 }
 
@@ -102,6 +102,10 @@ html, body {
     padding:20px;
     z-index:3;
     overflow:hidden;
+
+    display: flex;            /* row layout for icons */
+    flex-direction: row;
+    align-items: flex-start;
 }
 
 .desktop-icon {
@@ -118,8 +122,6 @@ html, body {
 
 .desktop-icon .icon {
     font-size: 48px;
-    display: inline-block;
-    /* Floating animation for QRD icon only */
 }
 
 #qrd-icon .icon {
@@ -134,7 +136,7 @@ html, body {
 /* Floating animation */
 @keyframes float {
     0% { transform: translateY(0px); }
-    100% { transform: translateY(-5px); } /* float up by 5px */
+    100% { transform: translateY(-5px); }
 }
 
 iframe {
@@ -254,10 +256,12 @@ function inZone(x, y, zone){
     return x >= w*zone.x1 && x <= w*zone.x2 && y >= h*zone.y1 && y <= h*zone.y2;
 }
 
+// Lobby click triggers
 lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
+    // Hallway
     if(inZone(x,y,{x1:0.02, x2:0.42, y1:0.18, y2:0.88})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
@@ -265,6 +269,7 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
+    // Diary
     if(inZone(x,y,{x1:0.70, x2:0.86, y1:0.26, y2:0.46})){
         lobby.style.backgroundImage = `url("${diaryImage}")`;
         inDiary=true;
@@ -272,6 +277,7 @@ lobby.addEventListener("click", e=>{
         return;
     }
 
+    // Terminal
     if(inZone(x,y,computerZone)){
         terminal.style.display="block";
         inTerminal=true;
@@ -280,12 +286,14 @@ lobby.addEventListener("click", e=>{
     }
 });
 
+// Terminal close now works anytime and clears password
 terminalClose.onclick = ()=>{
     terminal.style.display="none";
-    passwordInput.value="";
+    passwordInput.value=""; // always clear
     inTerminal=false;
 };
 
+// Password login
 loginBtn.onclick = ()=>{
     if(passwordInput.value.trim().toUpperCase()==="NOEXITFEE"){
         startBootSequence();
@@ -294,6 +302,7 @@ loginBtn.onclick = ()=>{
     }
 };
 
+// Boot sequence
 function startBootSequence(){
     terminal.style.display="none";
     inTerminal=false;
@@ -317,13 +326,13 @@ function startBootSequence(){
     nextStep();
 }
 
+// Iframes
 qrdIcon.onclick = ()=>{
     qrdFrame.src="qrd.html";
     qrdFrame.style.display="block";
     inIframe=true;
     mobileBack.style.display="block";
 };
-
 checkmateIcon.onclick = ()=>{
     checkmateFrame.src="cypher_chess_user_index.html";
     checkmateFrame.style.display="block";
@@ -331,6 +340,7 @@ checkmateIcon.onclick = ()=>{
     mobileBack.style.display="block";
 };
 
+// Back button
 mobileBack.onclick = ()=>{
     lobby.style.backgroundImage=`url("${originalLobby}")`;
     inHallway=false;
@@ -347,10 +357,12 @@ mobileBack.onclick = ()=>{
     mobileBack.style.display="none";
 };
 
+// Escape key
 document.addEventListener("keydown", e=>{
     if(e.key==="Escape") mobileBack.click();
 });
 
+// Music
 function startMusic(){
     if(!musicStarted){
         bgMusic.play().catch(()=>{});
