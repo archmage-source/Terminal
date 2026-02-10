@@ -4,148 +4,62 @@
 <meta charset="UTF-8">
 <title>ARCHIVE ACCESS NODE</title>
 <style>
-/* ===== MOBILE OPTIMIZED LAYOUT ===== */
+/* ===== GLOBAL ===== */
 body {
-  margin: 0;
-  padding: 0;
-  background: #050505;
-  color: #00ffcc;
-  font-family: monospace;
-  overflow: hidden;
-  height: 100vh;
+  margin:0; padding:0;
+  background:#050505; color:#00ffcc;
+  font-family:monospace; overflow:hidden;
+  height:100vh; width:100vw;
 }
 .section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 2vh 2vw;
+  display:flex; justify-content:center; align-items:center;
+  height:100vh; width:100%;
+  box-sizing:border-box; padding:2vh 2vw;
 }
 .box {
-  border: 1px solid #00ffcc;
-  padding: 2vh 2vw;
-  width: 96%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 90vh;
-  box-sizing: border-box;
-  overflow: hidden;
+  border:1px solid #00ffcc; padding:2vh 2vw;
+  width:96%; max-width:600px; display:flex;
+  flex-direction:column; align-items:center;
+  height:90vh; box-sizing:border-box; overflow:hidden;
 }
-.box-scroll {
-  overflow-y: auto;
-  width: 100%;
-}
+.box-scroll { overflow-y:auto; width:100%; }
+
 /* ===== KEYBOARD ===== */
-.keyboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2vh;
-  margin-top: 2vh;
-  width: 100%;
-}
-.keyboard-row {
-  display: flex;
-  justify-content: center;
-  gap: 2vw;
-  flex-wrap: wrap;
-  width: 100%;
-}
+.keyboard { display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; min-height:30vh; }
+.keyboard-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; width:100%; }
 .key {
-  border: 1px solid #00ffcc;
-  background: #000;
-  color: #00ffcc;
-  padding: 1.5vh 2vw;
-  min-width: 12vw;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  font-size: 4vw;
-  border-radius: 6px;
-  flex: 1 0 auto;
+  border:1px solid #00ffcc; background:#000; color:#00ffcc;
+  min-width:12vw; padding:2vh 0; text-align:center;
+  cursor:pointer; user-select:none; font-size:5vw; border-radius:6px;
 }
-.key-space { 
-  flex: 2 0 40%; 
-  min-width: 40%; 
-}
-.key:hover { 
-  background: #003333; 
-}
+.key-space { min-width:40%; font-size:4vw; }
+.key:hover { background:#003333; }
+
 /* ===== GLYPHS ===== */
-.glyphs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2vw;
-  justify-content: center;
-  margin-top: 2vh;
-}
-.glyph {
-  border: 1px solid #00ffcc;
-  padding: 2vw;
-  cursor: pointer;
-  font-size: 5vw;
-  border-radius: 6px;
-  text-align: center;
-}
-.glyph.used { opacity: 0.25; pointer-events: none; }
-#inputLog, #inputLog2 {
-  margin-top: 1vh;
-  border-top: 1px dashed #00ffcc;
-  padding-top: 0.5vh;
-  font-size: 3.5vw;
-  word-wrap: break-word;
-}
-button {
-  padding: 1.5vh 2vw;
-  background: #00ffcc;
-  border: none;
-  font-weight: bold;
-  font-size: 4vw;
-  margin-top: 1vh;
-  cursor: pointer;
-  border-radius: 4px;
-}
-.pair {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1vh;
-  flex-wrap: wrap;
-  gap: 2vw;
-}
-.pair span { min-width: 20vw; text-align: center; font-size: 3.5vw; }
-input {
-  width: 14vw;
-  background: black;
-  color: #00ffcc;
-  border: 1px solid #00ffcc;
-  text-align: center;
-  font-size: 3.5vw;
-  padding: 0.5vh 0;
-}
-input:disabled { opacity: 0.35; }
-.decode { margin-left: 2vw; font-size: 3.5vw; }
-#accessScreen {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 2vh 2vw;
-}
-#accessGranted { font-size: 6vw; font-weight: bold; margin-bottom: 2vh; text-align: center; }
-#gibberish { width: 100%; max-width: 600px; height: 55vh; border: 1px solid #00ffcc; padding: 1vh 1vw; overflow-y: auto; font-size: 3.5vw; box-sizing: border-box; }
-#unlockVideo { position: fixed; inset: 0; width: 100%; height: 100%; display: none; background: black; z-index: 9999; }
-#warningMessage { margin-top: 1vh; font-weight: bold; color: #ff4444; white-space: pre-wrap; text-align: center; font-size: 4vw; }
-table { margin-top: 1vh; border-collapse: collapse; width: 100%; font-size: 3.5vw; }
-table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: center; }
-.hidden { display: none; }
+.glyphs { display:flex; flex-wrap:wrap; gap:2vw; justify-content:center; margin-top:2vh; }
+.glyph { border:1px solid #00ffcc; padding:2vw; cursor:pointer; font-size:5vw; border-radius:6px; text-align:center; }
+.glyph.used { opacity:0.25; pointer-events:none; }
+#inputLog,#inputLog2 { margin-top:1vh; border-top:1px dashed #00ffcc; padding-top:0.5vh; font-size:3.5vw; word-wrap:break-word; }
+button { padding:1.5vh 2vw; background:#00ffcc; border:none; font-weight:bold; font-size:4vw; margin-top:1vh; cursor:pointer; border-radius:4px; }
+
+/* ===== TERMINAL ===== */
+.pair { display:flex; justify-content:center; align-items:center; margin-bottom:1vh; flex-wrap:wrap; gap:2vw; }
+.pair span { min-width:20vw; text-align:center; font-size:3.5vw; }
+input { width:14vw; background:black; color:#00ffcc; border:1px solid #00ffcc; text-align:center; font-size:3.5vw; padding:0.5vh 0; }
+input:disabled { opacity:0.35; }
+.decode { margin-left:2vw; font-size:3.5vw; }
+
+/* ===== ACCESS SCREEN ===== */
+#accessScreen { display:flex; flex-direction:column; justify-content:flex-start; align-items:center; height:100%; width:100%; box-sizing:border-box; padding:2vh 2vw; }
+#accessGranted { font-size:6vw; font-weight:bold; margin-bottom:2vh; text-align:center; }
+#gibberish { width:100%; max-width:600px; height:55vh; border:1px solid #00ffcc; padding:1vh 1vw; overflow-y:auto; font-size:3.5vw; box-sizing:border-box; }
+#unlockVideo { position:fixed; inset:0; width:100%; height:100%; display:none; background:black; z-index:9999; }
+
+/* ===== WARNINGS / TABLE ===== */
+#warningMessage { margin-top:1vh; font-weight:bold; color:#ff4444; white-space:pre-wrap; text-align:center; font-size:4vw; }
+table { margin-top:1vh; border-collapse:collapse; width:100%; font-size:3.5vw; }
+table, th, td { border:1px solid #00ffcc; padding:0.5vh 1vw; text-align:center; }
+.hidden { display:none; }
 </style>
 </head>
 <body>
@@ -170,7 +84,7 @@ table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: cente
   <div id="gibberish"></div>
 </div>
 
-<!-- FIRST GLYPH GATE -->
+<!-- GLYPH GATE 1 -->
 <div id="glyphGate" class="section hidden">
   <div class="box">
     <h3>SEQUENCE ALIGNMENT REQUIRED</h3>
@@ -183,7 +97,7 @@ table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: cente
   </div>
 </div>
 
-<!-- NUMERIC TERMINAL -->
+<!-- TERMINAL -->
 <div id="terminal" class="section hidden">
   <div class="box box-scroll">
     <h3>ARCHIVE ACCESS TERMINAL</h3>
@@ -194,7 +108,7 @@ table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: cente
   </div>
 </div>
 
-<!-- SECOND GLYPH GATE -->
+<!-- GLYPH GATE 2 -->
 <div id="glyphGate2" class="section hidden">
   <div class="box">
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
@@ -227,72 +141,66 @@ table, th, td { border: 1px solid #00ffcc; padding: 0.5vh 1vw; text-align: cente
 <video id="unlockVideo" playsinline></video>
 
 <script>
-// ==== FULL LOGIC ====
-(() => {
-const PASSWORD = "GLYPHGATE";
-let pw = [];
-const pwDisplay = document.getElementById("pwDisplay");
-const pwWarn = document.getElementById("pwWarn");
-const passwordGate = document.getElementById("passwordGate");
-const accessScreen = document.getElementById("accessScreen");
-const gibberish = document.getElementById("gibberish");
+document.addEventListener("DOMContentLoaded", ()=>{
+  const PASSWORD = "GLYPHGATE";
+  let pw = [];
+  const pwDisplay = document.getElementById("pwDisplay");
+  const pwWarn = document.getElementById("pwWarn");
+  const passwordGate = document.getElementById("passwordGate");
+  const accessScreen = document.getElementById("accessScreen");
+  const gibberish = document.getElementById("gibberish");
 
-// ===== KEYBOARD =====
-const keyboardLayout = [
-  ["Q","W","E","R","T","Y","U","I","O","P"],
-  ["A","S","D","F","G","H","J","K","L"],
-  ["Z","X","C","V","B","N","M"],
-  [" "]
-];
-const keyboard = document.getElementById("keyboard");
-keyboardLayout.forEach(row=>{
-  const r = document.createElement("div");
-  r.className = "keyboard-row";
-  row.forEach(k=>{
-    const key = document.createElement("div");
-    key.className = "key" + (k===" "?" key-space":"");
-    key.textContent = k===" "?"SPACE":k;
-    key.onclick = () => { if(pw.length < PASSWORD.length){ pw.push(k); pwDisplay.textContent = pw.join(""); } };
-    r.appendChild(key);
+  const keyboardLayout = [
+    ["Q","W","E","R","T","Y","U","I","O","P"],
+    ["A","S","D","F","G","H","J","K","L"],
+    ["Z","X","C","V","B","N","M"],
+    [" "]
+  ];
+
+  // build keyboard
+  const keyboard = document.getElementById("keyboard");
+  keyboardLayout.forEach(row=>{
+    const r = document.createElement("div");
+    r.className = "keyboard-row";
+    row.forEach(k=>{
+      const key = document.createElement("div");
+      key.className = "key" + (k===" "?" key-space":"");
+      key.textContent = k===" "?"SPACE":k;
+      key.onclick = ()=>{ if(pw.length<PASSWORD.length){ pw.push(k); pwDisplay.textContent=pw.join(""); } };
+      r.appendChild(key);
+    });
+    keyboard.appendChild(r);
   });
-  keyboard.appendChild(r);
-});
-document.getElementById("pwBack").onclick = () => { pw.pop(); pwDisplay.textContent = pw.join(""); };
 
-// ===== PASSWORD ENTER =====
-document.getElementById("pwEnter").onclick = () => {
-  if(pw.join("") === PASSWORD){
-    passwordGate.classList.add("hidden");
-    accessScreen.classList.remove("hidden");
+  document.getElementById("pwBack").onclick = ()=>{ pw.pop(); pwDisplay.textContent=pw.join(""); };
 
-    const bootLines = [
-      "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
-      "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
-      "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
-      "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
-      "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
-      "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
-    ];
+  document.getElementById("pwEnter").onclick = ()=>{
+    if(pw.join("")===PASSWORD){
+      passwordGate.classList.add("hidden");
+      accessScreen.classList.remove("hidden");
+      const bootLines=[
+        "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
+        "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
+        "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
+        "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
+        "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
+        "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
+      ];
+      let i=0;
+      const interval=setInterval(()=>{
+        gibberish.innerHTML += bootLines[Math.floor(Math.random()*bootLines.length)] + "<br>";
+        gibberish.scrollTop=gibberish.scrollHeight;
+        i++;
+        if(i>=150){ clearInterval(interval); accessScreen.classList.add("hidden"); initGlyphGate1(); }
+      },80);
+    } else {
+      pwWarn.textContent="INVALID INPUT"; pw=[]; pwDisplay.textContent="";
+    }
+  };
 
-    let i = 0;
-    const totalLines = 150;
-    const interval = setInterval(()=>{
-      gibberish.innerHTML += bootLines[Math.floor(Math.random()*bootLines.length)] + "<br>";
-      gibberish.scrollTop = gibberish.scrollHeight;
-      i++;
-      if(i >= totalLines){
-        clearInterval(interval);
-        accessScreen.classList.add("hidden");
-        initGlyphGate1();
-      }
-    },80);
-  } else {
-    pwWarn.textContent="INVALID INPUT"; pw=[]; pwDisplay.textContent="";
-  }
-};
+  // clock
+  setInterval(()=>document.getElementById("clock")?.textContent = new Date().toLocaleTimeString("en-GB"),1000);
 
-// ===== CLOCK =====
-setInterval(()=>document.getElementById("clock")?.textContent = new Date().toLocaleTimeString("en-GB"),1000);
 
 // ===== GLYPHGATE 1 =====
 function initGlyphGate1(){
@@ -461,4 +369,5 @@ function initGlyphGate2(){
 </script>
 </body>
 </html>
+
 
