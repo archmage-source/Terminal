@@ -21,7 +21,9 @@ html, body {
 #lobby {
     position: absolute;
     inset: 0;
-    background: url("/mnt/data/6600948d-3f18-431f-8be4-ae2a24efddec.png") center / cover no-repeat;
+    background: black; /* fallback */
+    background-size: cover;
+    background-position: center;
     filter: brightness(1) contrast(1.05);
     z-index: 0;
     cursor: pointer;
@@ -214,7 +216,7 @@ const bgMusic = document.getElementById("background-music");
 let inHallway=false, inDiary=false, inTerminal=false, inIframe=false;
 let musicStarted=false;
 
-const originalLobby = "/mnt/data/6600948d-3f18-431f-8be4-ae2a24efddec.png";
+const originalLobby = "Terminal room 2.png";
 const hallwayImage = "outside_hallway.png";
 const diaryImage = "diary.png";
 
@@ -229,8 +231,11 @@ const bootSteps=[
     "SYSTEM READY"
 ];
 
+// Set lobby background on launch
+lobby.style.backgroundImage = `url("${originalLobby}")`;
+
 // Terminal trigger zone based on image-relative coordinates
-const computerZone = { x1:0.43, x2:0.57, y1:0.52, y2:0.68 }; // Adjusted to match computer visually
+const computerZone = { x1:0.43, x2:0.57, y1:0.52, y2:0.68 };
 
 function inZone(x, y, zone){
     const w = window.innerWidth, h = window.innerHeight;
@@ -242,7 +247,7 @@ lobby.addEventListener("click", e=>{
     if(inHallway||inDiary||inTerminal||inIframe) return;
     const x=e.clientX, y=e.clientY;
 
-    // Hallway and diary zones (keep old logic)
+    // Hallway and diary zones
     if(inZone(x,y,{x1:0, x2:0.35, y1:0.2, y2:0.9})){
         lobby.style.backgroundImage = `url("${hallwayImage}")`;
         inHallway=true;
