@@ -247,7 +247,7 @@ table,th,td{
   </div>
 </div>
 
-<!-- SECOND GLYPH GATE -->
+<!-- SECOND GLYPH GATE (Mobile-Friendly) -->
 <div id="glyphGate2" class="section hidden">
   <div class="box">
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
@@ -280,10 +280,12 @@ table,th,td{
 <video id="unlockVideo" playsinline></video>
 
 <script>
-// ==== ORIGINAL JS LOGIC ====
+// ==== Original JS Logic goes here ====
 (() => {
 const PASSWORD="GLYPHGATE";
 let pw=[];
+
+// Password gate
 const pwDisplay=document.getElementById("pwDisplay");
 const pwWarn=document.getElementById("pwWarn");
 const passwordGate=document.getElementById("passwordGate");
@@ -291,13 +293,7 @@ const accessScreen=document.getElementById("accessScreen");
 const gibberish=document.getElementById("gibberish");
 const glyphGate=document.getElementById("glyphGate");
 
-const keyboardLayout=[
-["Q","W","E","R","T","Y","U","I","O","P"],
-["A","S","D","F","G","H","J","K","L"],
-["Z","X","C","V","B","N","M"],
-[" "]
-];
-
+const keyboardLayout=[["Q","W","E","R","T","Y","U","I","O","P"],["A","S","D","F","G","H","J","K","L"],["Z","X","C","V","B","N","M"],[" "]];
 const keyboard=document.getElementById("keyboard");
 keyboardLayout.forEach(row=>{
   const r=document.createElement("div");
@@ -317,14 +313,7 @@ document.getElementById("pwEnter").onclick=()=>{
   if(pw.join("")===PASSWORD){
     passwordGate.classList.add("hidden");
     accessScreen.classList.remove("hidden");
-    const bootLines=[
-      "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
-      "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
-      "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
-      "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
-      "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
-      "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
-    ];
+    const bootLines=["%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET","%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK","%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE","%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED","%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE","%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"];
     let i=0;
     const interval=setInterval(()=>{
       gibberish.innerHTML+=bootLines[Math.floor(Math.random()*bootLines.length)]+"<br>";
@@ -344,6 +333,7 @@ document.getElementById("pwEnter").onclick=()=>{
 
 // CLOCK
 setInterval(()=>document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB"),1000);
+
 
 /* === FULL ORIGINAL GLYPH, NUMERIC TERMINAL, SECOND GLYPH GATE LOGIC === */
 
@@ -543,5 +533,6 @@ verify.onclick = () => {
 
 </body>
 </html>
+
 
 
