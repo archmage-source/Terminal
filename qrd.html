@@ -115,27 +115,39 @@ button{
 
 /* Numeric terminal */
 #clock{margin-bottom:6px;font-weight:bold}
+#pairs{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  width:100%;
+}
 .pair{
   display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-bottom:4px;
   flex-wrap:wrap;
-  gap:4px;
+  justify-content:flex-start;
+  align-items:center;
+  gap:6px;
+  width:100%;
 }
-.pair span{width:70px; flex-shrink:0;}
-input{
+.pair span{
+  flex:0 0 80px;
+  min-width:60px;
+}
+.pair input{
   width:44px;
   min-width:40px;
-  padding:6px;
+  padding:8px;
   background:black;
   color:#00ffcc;
   border:1px solid #00ffcc;
   text-align:center;
-  font-size:clamp(12px,3vw,16px);
+  font-size:clamp(14px,3vw,18px);
 }
-input:disabled{opacity:.35}
-.decode{margin-left:8px; flex-shrink:0;}
+.pair .decode{
+  margin-left:8px;
+  flex-shrink:0;
+  font-size:clamp(12px,2.5vw,16px);
+}
 
 /* Access screen */
 #accessGranted{
@@ -531,4 +543,5 @@ verify.onclick = () => {
 
 </body>
 </html>
+
 
