@@ -5,27 +5,31 @@
 <title>ARCHIVE ACCESS NODE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+
 body{
   margin:0;
   padding:0;
   background:#050505;
   color:#00ffcc;
   font-family:monospace;
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
 }
+
+/* Sections now scroll safely */
 .section{
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  min-height:100vh;
   width:100%;
-  overflow:auto;
-  padding:12px;
+  padding:16px 12px;
   box-sizing:border-box;
 }
+
 .box{
   border:1px solid #00ffcc;
-  padding:24px;
+  padding:20px;
   max-width:720px;
   width:100%;
   display:flex;
@@ -33,78 +37,87 @@ body{
   align-items:center;
   box-sizing:border-box;
 }
+
 .hidden{display:none}
 
 /* KEYBOARD */
 .keyboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  width: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  margin-top:12px;
+  width:100%;
 }
+
 .keyboard-row {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  width: 100%;
+  display:flex;
+  gap:4px;
+  justify-content:center;
+  width:100%;
   flex-wrap:wrap;
 }
+
 .key {
-  border: 1px solid #00ffcc;
-  padding: 10px 0;
-  flex: 1 1 0;
-  min-width: 24px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  font-size: clamp(12px, 3vw, 18px);
-  border-radius: 4px;
+  border:1px solid #00ffcc;
+  padding:10px 0;
+  flex:1 1 0;
+  min-width:24px;
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+  font-size:clamp(12px,3vw,18px);
+  border-radius:4px;
 }
-.key:hover { background: #003333; }
+
+.key:hover { background:#003333; }
+
 .key-space {
-  flex: 3 1 0;
-  min-width: 60px;
+  flex:3 1 0;
+  min-width:60px;
 }
 
 /* GLYPHS */
 .glyphs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  justify-content:center;
   max-width:100%;
-  overflow-x:auto;
-  padding-bottom:4px;
 }
+
 .glyph {
-  border: 1px solid #00ffcc;
-  flex: 1 1 clamp(40px, 12%, 60px);
+  border:1px solid #00ffcc;
+  flex:1 1 clamp(40px,12%,60px);
   min-width:40px;
   max-width:60px;
-  text-align: center;
-  cursor: pointer;
-  font-size: clamp(16px, 4vw, 24px);
-  height: clamp(40px,6vw,60px);
+  text-align:center;
+  cursor:pointer;
+  font-size:clamp(16px,4vw,24px);
+  height:clamp(40px,6vw,60px);
   display:flex;
   align-items:center;
   justify-content:center;
   border-radius:4px;
 }
-.glyph.used { opacity: .25; pointer-events: none; }
 
-#inputLog,#inputLog2{
-  margin-top:6px;
-  border-top:1px dashed #00ffcc;
-  padding-top:5px;
-  font-size:.8em;
-  word-break:break-word;
+.glyph.used {
+  opacity:.25;
+  pointer-events:none;
 }
 
-/* Controls */
+#inputLog,#inputLog2{
+  margin-top:8px;
+  border-top:1px dashed #00ffcc;
+  padding-top:6px;
+  font-size:.8em;
+  word-break:break-word;
+  width:100%;
+}
+
+/* BUTTONS */
 button{
-  padding:8px;
+  padding:10px;
   background:#00ffcc;
   border:none;
   font-weight:bold;
@@ -113,37 +126,82 @@ button{
   border-radius:4px;
 }
 
-/* Numeric terminal */
-#clock{margin-bottom:6px;font-weight:bold}
+/* ========================= */
+/* === NUMERIC TERMINAL === */
+/* ========================= */
+
+#terminal .box{
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+#clock{
+  margin-bottom:10px;
+  font-weight:bold;
+  text-align:center;
+  font-size:clamp(14px,4vw,18px);
+}
+
+#pairs{
+  width:100%;
+  margin-top:6px;
+}
+
 .pair{
   display:flex;
-  justify-content:center;
   align-items:center;
-  margin-bottom:4px;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
   flex-wrap:wrap;
-  gap:4px;
+  font-size:clamp(12px,3.5vw,16px);
 }
-.pair span{width:70px; flex-shrink:0;}
-input{
-  width:44px;
-  min-width:40px;
-  padding:6px;
+
+.pair span{
+  min-width:72px;
+}
+
+.pair input{
+  width:100%;
+  max-width:60px;
+  padding:8px 4px;
   background:black;
   color:#00ffcc;
   border:1px solid #00ffcc;
   text-align:center;
-  font-size:clamp(12px,3vw,16px);
+  font-size:16px; /* prevents mobile zoom */
 }
-input:disabled{opacity:.35}
-.decode{margin-left:8px; flex-shrink:0;}
 
-/* Access screen */
+input:disabled{
+  opacity:.35;
+}
+
+.decode{
+  min-width:70px;
+  text-align:right;
+  font-size:clamp(11px,3vw,14px);
+}
+
+#decodedBox{
+  margin-top:14px;
+  width:100%;
+  word-break:break-word;
+  font-size:clamp(12px,3.5vw,16px);
+}
+
+#verify{
+  margin-top:14px;
+  width:100%;
+}
+
+/* ACCESS SCREEN */
 #accessGranted{
   font-size:2em;
   font-weight:bold;
   margin-bottom:12px;
   text-align:center;
 }
+
 #gibberish{
   width:100%;
   max-width:720px;
@@ -155,7 +213,7 @@ input:disabled{opacity:.35}
   word-break:break-word;
 }
 
-/* Video */
+/* VIDEO */
 #unlockVideo{
   position:fixed;
   inset:0;
@@ -167,7 +225,7 @@ input:disabled{opacity:.35}
   object-fit:cover;
 }
 
-/* Warning & Table */
+/* WARNING & TABLE */
 #warningMessage{
   margin-top:12px;
   font-weight:bold;
@@ -175,21 +233,25 @@ input:disabled{opacity:.35}
   white-space:pre-wrap;
   text-align:center;
 }
+
 table{
   margin-top:12px;
   border-collapse:collapse;
   width:100%;
   table-layout:fixed;
-  word-wrap:break-word;
 }
+
 table,th,td{
   border:1px solid #00ffcc;
   padding:6px;
   text-align:center;
 }
+
 </style>
 </head>
 <body>
+
+<!-- KEEPING ALL YOUR ORIGINAL HTML + SCRIPT BELOW UNCHANGED -->
 
 <!-- PASSWORD GATE -->
 <div id="passwordGate" class="section">
@@ -531,3 +593,4 @@ verify.onclick = () => {
 
 </body>
 </html>
+
