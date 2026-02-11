@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CHECKMATE</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background:
+    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+    url("no-exit-fee.jpg") center / cover no-repeat fixed;
+  font-family: monospace;
+  color: #eee;
+}
+
+.controls { margin-bottom: 10px; }
+
+button {
+  padding: 8px 16px;
+  background: #222;
+  color: #eee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+button:hover { background: #444; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(14, 40px);
+  grid-template-rows: repeat(14, 40px);
+  background: rgba(0,0,0,0.7);
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dark { background: #1c1c1c; }
+.light { background: #2b2b2b; }
+
+.piece { font-size: 18px; }
+
+.cell:hover .piece { outline: 2px solid #aaa; }
+
+.selected { box-shadow: inset 0 0 0 3px lime; }
+.highlight { background: rgba(0,255,0,0.25); }
+
+#glyphgate {
+  position: absolute;
+  font-size: 40px;
+  color: red;
+  font-weight: bold;
+  letter-spacing: 6px;
+  display: none;
+  text-shadow: 0 0 15px red;
+  pointer-events: none;
+}
+
+#kingOverlay {
+  position: fixed;           /* center above everything */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 90%;
+  display: none;
+  pointer-events: none;
+  border: 4px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 20px #000;
+  z-index: 1000;             /* on top of board */
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+  <button id="reset">Clear Entry</button>
+</div>
+
+<div class="board" id="board"></div>
+<div id="glyphgate">GLYPHGATE</div>
+<img id="kingOverlay" src="" alt="King Taken">
+
+<script>
+const SIZE = 14;
+const TURN_ORDER = ["south","west","north","east"];
+
+const boardEl = document.getElementById("board");
+const glyphEl = document.getElementById("glyphgate");
+const overlayEl = document.getElementById("kingOverlay");
+
+let board = [];
+let selected = null;
+let currentTurnIndex = null;
+let glyphTimer = null;
+
+const specialTargets = {
+  south: { type: "queen", col: "D", row: 1 },
+  west:  { type: "bishop", col: "B", row: 3 },
+  north: { type: "king", col: "D", row: 7 },
+  east:  { type: "knight", col: "C", row: 7 }
+};
+
+// Original capitalized PNG names
+const kingImages = {
+  south: "Queen.png",
+  west: "Bishop.png",
+  north: "King-2.png",
+  east: "Knight.png"
+};
+
+function emptyBoard() {
+  return Array.from({ length: SIZE }, () => Array(SIZE).fill(null));
+}
+
+function initBoard() {
+  board = emptyBoard();
+  placeSide("south", 13, 12);
+  placeSide("north", 0, 1);
+  placeSide("west", 0, 1, true);
+  placeSide("east", 13, 12, true);
+  selected = null;
+  currentTurnIndex = null;
+  stopGlyphgate();
+  overlayEl.style.display = "none";
+  render();
+}
+
+function placeSide(owner, back, pawn, vertical=false) {
+  const order = ["rook","knight","bishop","queen","king","bishop","knight","rook"];
+  for (let i = 0; i < 8; i++) {
+    const x = vertical ? back : i + 3;
+    const y = vertical ? i + 3 : back;
+    board[y][x] = { type: order[i], owner };
+  }
+  for (let i = 3; i <= 10; i++) {
+    const x = vertical ? pawn : i;
+    const y = vertical ? i : pawn;
+    board[y][x] = { type: "pawn", owner, moved: false };
+  }
+}
+
+function render() {
+  boardEl.innerHTML = "";
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const cell = document.createElement("div");
+      cell.className = `cell ${(x+y)%2?"light":"dark"}`;
+
+      if (board[y][x]) {
+        const p = document.createElement("div");
+        p.className = "piece";
+        p.textContent = pieceChar(board[y][x].type);
+
+        if (currentTurnIndex !== null &&
+            board[y][x].owner !== TURN_ORDER[currentTurnIndex]) {
+          p.style.opacity = "0.35";
+        }
+
+        cell.appendChild(p);
+      }
+
+      if (selected && selected.x === x && selected.y === y) {
+        cell.classList.add("selected");
+      }
+
+      cell.onclick = () => clickCell(x,y);
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+function pieceChar(t) {
+  return { king:"♔", queen:"♕", rook:"♖", bishop:"♗", knight:"♘", pawn:"♙" }[t];
+}
+
+function clickCell(x,y) {
+  const piece = board[y][x];
+
+  if (selected) {
+    if (attemptMove(selected.x, selected.y, x, y)) advanceTurn();
+    selected = null;
+    clearHighlights();
+  } else if (piece) {
+    if (currentTurnIndex === null) {
+      currentTurnIndex = TURN_ORDER.indexOf(piece.owner);
+    }
+    if (piece.owner === TURN_ORDER[currentTurnIndex]) {
+      selected = { x, y };
+      showMoves(x,y);
+    }
+  }
+  render();
+}
+
+function advanceTurn() {
+  currentTurnIndex = (currentTurnIndex + 1) % TURN_ORDER.length;
+}
+
+function attemptMove(fx,fy,tx,ty) {
+  if (!validMove(fx,fy,tx,ty)) return false;
+
+  const target = board[ty][tx];
+  if (target && target.type === "king") {
+    showKingOverlay(target.owner);
+  }
+
+  board[ty][tx] = board[fy][fx];
+  board[fy][fx] = null;
+  if (board[ty][tx].type === "pawn") board[ty][tx].moved = true;
+  checkGlyphgate();
+  return true;
+}
+
+function showKingOverlay(side) {
+  overlayEl.src = kingImages[side];
+  overlayEl.style.display = "block";
+  setTimeout(() => {
+    overlayEl.style.display = "none";
+    initBoard();
+  }, 10000);
+}
+
+function validMove(fx,fy,tx,ty) {
+  const p = board[fy][fx];
+  if (!p) return false;
+  if (board[ty][tx] && board[ty][tx].owner === p.owner) return false;
+
+  const dx = tx - fx;
+  const dy = ty - fy;
+  const adx = Math.abs(dx);
+  const ady = Math.abs(dy);
+
+  if (p.type === "knight") return (adx===2&&ady===1)||(adx===1&&ady===2);
+  if (p.type === "king") return adx<=1 && ady<=1;
+  if (p.type === "rook") return clearPath(fx,fy,tx,ty) && (fx===tx||fy===ty);
+  if (p.type === "bishop") return clearPath(fx,fy,tx,ty) && adx===ady;
+  if (p.type === "queen") return clearPath(fx,fy,tx,ty) && (fx===tx||fy===ty||adx===ady);
+
+  if (p.type === "pawn") {
+    const dir = {
+      south: { dx: 0, dy: -1 },
+      north: { dx: 0, dy: 1 },
+      west:  { dx: 1, dy: 0 },
+      east:  { dx: -1, dy: 0 }
+    }[p.owner];
+
+    if (!dir) return false;
+
+    if (!p.moved &&
+        dx === dir.dx * 2 &&
+        dy === dir.dy * 2) return true;
+
+    return dx === dir.dx && dy === dir.dy;
+  }
+  return false;
+}
+
+function clearPath(fx,fy,tx,ty) {
+  const stepx = Math.sign(tx - fx);
+  const stepy = Math.sign(ty - fy);
+  let x = fx + stepx;
+  let y = fy + stepy;
+  while (x !== tx || y !== ty) {
+    if (board[y][x]) return false;
+    x += stepx;
+    y += stepy;
+  }
+  return true;
+}
+
+function showMoves(x,y) {
+  clearHighlights();
+  for (let ty=0; ty<SIZE; ty++) {
+    for (let tx=0; tx<SIZE; tx++) {
+      if (validMove(x,y,tx,ty)) {
+        boardEl.children[ty*SIZE+tx].classList.add("highlight");
+      }
+    }
+  }
+}
+
+function clearHighlights() {
+  document.querySelectorAll(".highlight").forEach(c=>c.classList.remove("highlight"));
+}
+
+function startGlyphgate() {
+  if (glyphTimer) return;
+  glyphEl.style.display = "block";
+  let on = true;
+  glyphTimer = setInterval(()=> {
+    glyphEl.style.opacity = on ? 0 : 1;
+    on = !on;
+  }, 500);
+}
+
+function stopGlyphgate() {
+  if (glyphTimer) clearInterval(glyphTimer);
+  glyphTimer = null;
+  glyphEl.style.display = "none";
+  glyphEl.style.opacity = 1;
+}
+
+function getIndex(side, col, row) {
+  const x = col.charCodeAt(0) - 65;
+  const y = row - 1;
+  if (side==="south") return { x, y:13-y };
+  if (side==="west")  return { x:y, y:x };
+  if (side==="north") return { x:13-x, y:y };
+  if (side==="east")  return { x:13-y, y:13-x };
+}
+
+function checkGlyphgate() {
+  let ok = true;
+  for (const side in specialTargets) {
+    const t = specialTargets[side];
+    const pos = getIndex(side, t.col, t.row);
+    const p = board[pos.y][pos.x];
+    if (!p || p.type !== t.type || p.owner !== side) ok = false;
+  }
+  ok ? startGlyphgate() : stopGlyphgate();
+}
+
+document.getElementById("reset").onclick = initBoard;
+
+initBoard();
+</script>
+
+</body>
+</html>
