@@ -190,6 +190,14 @@ PASSWORD REQUIRED:
 <audio id="background-music" src="Jitteridle.mp3" loop></audio>
 
 <script>
+  // ===== Desktop detection & redirect =====
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (!isMobile) {
+      // Desktop detected → redirect to TERMINAL_DESKTOP version
+      window.location.href = "TERMINAL_DESKTOP_index.html";
+  }
+
+  // ===== Original script =====
 const lobby = document.getElementById("lobby");
 const terminal = document.getElementById("terminal");
 const terminalClose = document.getElementById("terminal-close");
@@ -274,22 +282,17 @@ loginBtn.onclick = () => {
     if (passwordInput.value.trim().toUpperCase() === "NOEXITFEE") {
         startBootSequence();
     } else {
-        // Store current text
         const originalText = terminalText.textContent;
-        // Show DENIED briefly
         terminalText.textContent = "ACCESS DENIED";
         terminalText.style.color = "red";
-
         setTimeout(() => {
             terminalText.textContent = originalText;
             terminalText.style.color = "#00ff66";
         }, 700);
-
         passwordInput.value = "";
         passwordInput.focus();
     }
 };
-
 
 function startBootSequence(){
     terminal.style.display="none";
@@ -360,5 +363,3 @@ document.addEventListener("keydown", startMusic,{once:true});
 
 </body>
 </html>
-
-
