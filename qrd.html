@@ -4,149 +4,186 @@
 <meta charset="UTF-8">
 <title>ARCHIVE ACCESS NODE</title>
 <style>
-body{
-  margin:0;
-  padding:0;
-  background:#050505;
-  color:#00ffcc;
-  font-family:monospace;
-  overflow:hidden;
+/* ===== Mobile-Friendly CSS ===== */
+body {
+  margin: 0;
+  padding: 0;
+  background: #050505;
+  color: #00ffcc;
+  font-family: monospace;
+  overflow-y: auto;
+  font-size: 14px;
 }
-.section{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  width:100%;
+
+.section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
-.box{
-  border:1px solid #00ffcc;
-  padding:24px;
-  max-width:720px;
-  width:90%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+
+.box {
+  border: 1px solid #00ffcc;
+  padding: 8px;
+  width: 100%;
+  max-width: 400px; /* max width for phones */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9em;
+  overflow: hidden;
 }
-.hidden{display:none}
 
 /* Keyboard */
-.keyboard{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  margin-top:12px;
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  width: 100%;
 }
-.keyboard-row{
-  display:flex;
-  gap:6px;
-  justify-content:center;
+.keyboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  width: 100%;
 }
-.key{
-  border:1px solid #00ffcc;
-  padding:10px 14px;
-  min-width:40px;
-  text-align:center;
-  cursor:pointer;
-  user-select:none;
+.key {
+  flex: 1 1 8%;
+  min-width: 24px;
+  padding: 6px 0;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.8em;
 }
-.key:hover{background:#003333}
-.key-space{
-  min-width:260px;
+.key-space {
+  flex: 2 1 40%;
 }
 
 /* Glyphs */
-.glyphs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  justify-content:center;
+.glyphs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
 }
-.glyph{
-  border:1px solid #00ffcc;
-  padding:5px 7px;
-  cursor:pointer;
+.glyph {
+  flex: 1 1 20%;
+  border: 1px solid #00ffcc;
+  padding: 4px 0;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.9em;
 }
-.glyph.used{opacity:.25;pointer-events:none}
+.glyph.used { opacity: 0.25; pointer-events: none; }
 
-#inputLog,#inputLog2{
-  margin-top:6px;
-  border-top:1px dashed #00ffcc;
-  padding-top:5px;
-  font-size:.8em;
+#inputLog, #inputLog2 {
+  margin-top: 4px;
+  border-top: 1px dashed #00ffcc;
+  padding-top: 3px;
+  font-size: 0.7em;
+  width: 100%;
+  word-wrap: break-word;
 }
 
 /* Controls */
-button{
-  padding:8px;
-  background:#00ffcc;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+button {
+  padding: 6px;
+  background: #00ffcc;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.8em;
+  width: 48%;
+  margin: 2px 1%;
 }
 
 /* Numeric terminal */
-#clock{margin-bottom:6px;font-weight:bold}
-.pair{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-bottom:4px;
+#clock { margin-bottom: 4px; font-weight: bold; font-size: 0.9em; }
+.pair {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  width: 100%;
 }
-.pair span{width:70px}
-input{
-  width:44px;
-  background:black;
-  color:#00ffcc;
-  border:1px solid #00ffcc;
-  text-align:center;
+.pair span { width: auto; margin-right: 4px; font-size: 0.8em; }
+input {
+  width: 20%;
+  min-width: 30px;
+  background: black;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+  text-align: center;
+  font-size: 0.8em;
+  margin-right: 4px;
 }
-input:disabled{opacity:.35}
-.decode{margin-left:8px}
 
 /* Access screen */
-#accessGranted{
-  font-size:2em;
-  font-weight:bold;
-  margin-bottom:12px;
+#accessGranted {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
-#gibberish{
-  width:80%;
-  max-width:720px;
-  height:55vh;
-  border:1px solid #00ffcc;
-  padding:10px;
-  overflow-y:auto;
-  font-size:.85em;
+#gibberish {
+  width: 100%;
+  max-height: 40vh;
+  border: 1px solid #00ffcc;
+  padding: 6px;
+  overflow-y: auto;
+  font-size: 0.8em;
 }
 
 /* Video */
-#unlockVideo{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:none;
-  background:black;
-  z-index:9999;
+#unlockVideo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background: black;
+  z-index: 9999;
 }
 
 /* Warning & Table */
-#warningMessage{
-  margin-top:12px;
-  font-weight:bold;
-  color:#ff4444;
-  white-space:pre;
-  text-align:center;
+#warningMessage {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #ff4444;
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: 0.8em;
 }
-table{
-  margin-top:12px;
-  border-collapse:collapse;
+table {
+  margin-top: 8px;
+  border-collapse: collapse;
+  font-size: 0.75em;
+  width: 100%;
 }
-table,th,td{
-  border:1px solid #00ffcc;
-  padding:6px;
+table, th, td {
+  border: 1px solid #00ffcc;
+  padding: 3px;
+  text-align: center;
+}
+
+/* Small screens */
+@media(max-width: 480px){
+  body { font-size: 12px; }
+  .key { font-size: 0.7em; padding: 4px 0; }
+  .key-space { flex: 2 1 30%; }
+  .glyph { flex: 1 1 25%; font-size: 0.8em; }
+  #gibberish { max-height: 35vh; font-size: 0.75em; }
+  #accessGranted { font-size: 1.2em; }
+  button { font-size: 0.75em; padding: 4px; }
+  input { font-size: 0.75em; width: 25%; min-width: 24px; margin-bottom: 2px; }
+  table, th, td { font-size: 0.7em; padding: 2px; }
 }
 </style>
 </head>
@@ -178,7 +215,7 @@ table,th,td{
     <h3>SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs"></div>
     <div id="inputLog"><strong>INPUT:</strong> <span id="inputText"></span></div>
-    <div class="glyph-controls">
+    <div class="glyph-controls" style="display:flex;gap:4px;margin-top:6px">
       <button id="backspace">BACKSPACE</button>
       <button id="glyphVerify">VERIFY SEQUENCE</button>
     </div>
@@ -202,7 +239,7 @@ table,th,td{
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs2"></div>
     <div id="inputLog2"><strong>INPUT:</strong> <span id="inputText2"></span></div>
-    <div class="glyph-controls">
+    <div class="glyph-controls" style="display:flex;gap:4px;margin-top:6px">
       <button id="backspace2">BACKSPACE</button>
       <button id="glyphVerify2">VERIFY SEQUENCE</button>
     </div>
@@ -492,3 +529,4 @@ verify.onclick = () => {
 
 </body>
 </html>
+
