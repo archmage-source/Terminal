@@ -3,176 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <title>ARCHIVE ACCESS NODE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* ===== MOBILE-FRIENDLY STYLING ===== */
-body {
-  margin: 0;
-  padding: 0;
-  background: #050505;
-  color: #00ffcc;
-  font-family: monospace;
-  font-size: 14px;
-  overflow-y: auto;
+body{
+  margin:0;
+  padding:0;
+  background:#050505;
+  color:#00ffcc;
+  font-family:monospace;
+  overflow:hidden;
 }
-
-/* SECTION CONTAINER */
-.section {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+.section{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  width:100%;
+  overflow:auto;
+  padding:12px;
+  box-sizing:border-box;
 }
-
-/* BOX STYLING */
-.box {
-  border: 1px solid #00ffcc;
-  padding: 12px;
-  width: 100%;
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.9em;
-  overflow-y: auto;
-  max-height: 95vh;
-  box-sizing: border-box;
+.box{
+  border:1px solid #00ffcc;
+  padding:24px;
+  max-width:720px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  box-sizing:border-box;
 }
+.hidden{display:none}
 
 /* KEYBOARD */
 .keyboard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 12px;
   width: 100%;
 }
 .keyboard-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 4px;
   justify-content: center;
   width: 100%;
+  flex-wrap:wrap;
 }
 .key {
-  flex: 1 1 8%;
+  border: 1px solid #00ffcc;
+  padding: 10px 0;
+  flex: 1 1 0;
   min-width: 24px;
-  padding: 6px 0;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  font-size: 0.8em;
-  border: 1px solid #00ffcc;
+  font-size: clamp(12px, 3vw, 18px);
+  border-radius: 4px;
 }
-.key-space { flex: 2 1 40%; }
+.key:hover { background: #003333; }
+.key-space {
+  flex: 3 1 0;
+  min-width: 60px;
+}
 
 /* GLYPHS */
 .glyphs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-  gap: 6px;
-  justify-items: center;
-  width: 100%;
-  max-height: 50vh;
-  overflow-y: auto;
-  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  max-width:100%;
+  overflow-x:auto;
+  padding-bottom:4px;
 }
 .glyph {
   border: 1px solid #00ffcc;
-  padding: 8px 0;
+  flex: 1 1 clamp(40px, 12%, 60px);
+  min-width:40px;
+  max-width:60px;
   text-align: center;
   cursor: pointer;
-  font-size: 1.2em;
-  min-width: 40px;
-  box-sizing: border-box;
-  user-select: none;
+  font-size: clamp(16px, 4vw, 24px);
+  height: clamp(40px,6vw,60px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
 }
-.glyph.used { opacity: 0.25; pointer-events: none; }
+.glyph.used { opacity: .25; pointer-events: none; }
 
-/* INPUT LOGS */
-#inputLog, #inputLog2 {
-  margin-top: 6px;
-  border-top: 1px dashed #00ffcc;
-  padding-top: 4px;
-  font-size: 0.75em;
-  width: 100%;
-  word-wrap: break-word;
-}
-
-/* BUTTONS */
-button {
-  padding: 6px;
-  background: #00ffcc;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 0.8em;
-  width: 48%;
-  margin: 2px 1%;
+#inputLog,#inputLog2{
+  margin-top:6px;
+  border-top:1px dashed #00ffcc;
+  padding-top:5px;
+  font-size:.8em;
+  word-break:break-word;
 }
 
-/* NUMERIC TERMINAL */
-.pair {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 4px;
-  width: 100%;
-}
-.pair span { width: auto; margin-right: 4px; font-size: 0.8em; }
-input {
-  width: 20%;
-  min-width: 30px;
-  background: black;
-  color: #00ffcc;
-  border: 1px solid #00ffcc;
-  text-align: center;
-  font-size: 0.8em;
-  margin-right: 4px;
-}
-#decodedBox {
-  width: 100%;
-  margin-top: 6px;
-  font-size: 0.8em;
-  word-wrap: break-word;
+/* Controls */
+button{
+  padding:8px;
+  background:#00ffcc;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:clamp(12px,3vw,16px);
+  border-radius:4px;
 }
 
-/* WARNING & TABLE */
-#warningMessage {
-  margin-top: 8px;
-  font-weight: bold;
-  color: #ff4444;
-  white-space: pre-wrap;
-  text-align: center;
-  font-size: 0.8em;
+/* Numeric terminal */
+#clock{margin-bottom:6px;font-weight:bold}
+.pair{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:4px;
+  flex-wrap:wrap;
+  gap:4px;
 }
-table {
-  margin-top: 8px;
-  border-collapse: collapse;
-  font-size: 0.75em;
-  width: 100%;
+.pair span{width:70px; flex-shrink:0;}
+input{
+  width:44px;
+  min-width:40px;
+  padding:6px;
+  background:black;
+  color:#00ffcc;
+  border:1px solid #00ffcc;
+  text-align:center;
+  font-size:clamp(12px,3vw,16px);
 }
-table, th, td {
-  border: 1px solid #00ffcc;
-  padding: 3px;
-  text-align: center;
+input:disabled{opacity:.35}
+.decode{margin-left:8px; flex-shrink:0;}
+
+/* Access screen */
+#accessGranted{
+  font-size:2em;
+  font-weight:bold;
+  margin-bottom:12px;
+  text-align:center;
+}
+#gibberish{
+  width:100%;
+  max-width:720px;
+  height:55vh;
+  border:1px solid #00ffcc;
+  padding:10px;
+  overflow-y:auto;
+  font-size:.85em;
+  word-break:break-word;
 }
 
-/* SMALL SCREENS */
-@media(max-width: 480px){
-  body { font-size: 12px; }
-  .key { font-size: 0.7em; padding: 4px 0; }
-  .key-space { flex: 2 1 30%; }
-  .glyph { font-size: 1em; min-width: 36px; }
-  #gibberish { max-height: 35vh; font-size: 0.75em; }
-  #accessGranted { font-size: 1.2em; }
-  button { font-size: 0.75em; padding: 4px; }
-  input { font-size: 0.75em; width: 25%; min-width: 24px; margin-bottom: 2px; }
-  table, th, td { font-size: 0.7em; padding: 2px; }
+/* Video */
+#unlockVideo{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:none;
+  background:black;
+  z-index:9999;
+  object-fit:cover;
+}
+
+/* Warning & Table */
+#warningMessage{
+  margin-top:12px;
+  font-weight:bold;
+  color:#ff4444;
+  white-space:pre-wrap;
+  text-align:center;
+}
+table{
+  margin-top:12px;
+  border-collapse:collapse;
+  width:100%;
+  table-layout:fixed;
+  word-wrap:break-word;
+}
+table,th,td{
+  border:1px solid #00ffcc;
+  padding:6px;
+  text-align:center;
 }
 </style>
 </head>
@@ -184,7 +197,7 @@ table, th, td {
     <h3>ENTER ACCESS PASSWORD</h3>
     <div id="pwDisplay" style="min-height:24px;margin-bottom:6px"></div>
     <div class="keyboard" id="keyboard"></div>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
       <button id="pwBack">BACKSPACE</button>
       <button id="pwEnter">ENTER</button>
     </div>
@@ -194,19 +207,17 @@ table, th, td {
 
 <!-- ACCESS GRANTED -->
 <div id="accessScreen" class="section hidden" style="flex-direction:column">
-  <div class="box">
-    <div id="accessGranted">ACCESS GRANTED</div>
-    <div id="gibberish" style="max-height:50vh; overflow-y:auto;"></div>
-  </div>
+  <div id="accessGranted">ACCESS GRANTED</div>
+  <div id="gibberish"></div>
 </div>
 
-<!-- GLYPH GATE 1 -->
+<!-- FIRST GLYPH GATE -->
 <div id="glyphGate" class="section hidden">
   <div class="box">
     <h3>SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs"></div>
     <div id="inputLog"><strong>INPUT:</strong> <span id="inputText"></span></div>
-    <div class="glyph-controls" style="display:flex;gap:4px;margin-top:6px">
+    <div class="glyph-controls" style="display:flex;flex-wrap:wrap;gap:4px;">
       <button id="backspace">BACKSPACE</button>
       <button id="glyphVerify">VERIFY SEQUENCE</button>
     </div>
@@ -224,13 +235,13 @@ table, th, td {
   </div>
 </div>
 
-<!-- GLYPH GATE 2 -->
+<!-- SECOND GLYPH GATE -->
 <div id="glyphGate2" class="section hidden">
   <div class="box">
     <h3>SECOND SEQUENCE ALIGNMENT REQUIRED</h3>
     <div class="glyphs" id="glyphs2"></div>
     <div id="inputLog2"><strong>INPUT:</strong> <span id="inputText2"></span></div>
-    <div class="glyph-controls" style="display:flex;gap:4px;margin-top:6px">
+    <div class="glyph-controls" style="display:flex;flex-wrap:wrap;gap:4px;">
       <button id="backspace2">BACKSPACE</button>
       <button id="glyphVerify2">VERIFY SEQUENCE</button>
     </div>
@@ -257,9 +268,8 @@ table, th, td {
 <video id="unlockVideo" playsinline></video>
 
 <script>
-// =================== JAVASCRIPT FLOW ===================
-
-// PASSWORD GATE
+// ==== ORIGINAL JS LOGIC ====
+(() => {
 const PASSWORD="GLYPHGATE";
 let pw=[];
 const pwDisplay=document.getElementById("pwDisplay");
@@ -269,7 +279,13 @@ const accessScreen=document.getElementById("accessScreen");
 const gibberish=document.getElementById("gibberish");
 const glyphGate=document.getElementById("glyphGate");
 
-const keyboardLayout=[["Q","W","E","R","T","Y","U","I","O","P"],["A","S","D","F","G","H","J","K","L"],["Z","X","C","V","B","N","M"],[" "]];
+const keyboardLayout=[
+["Q","W","E","R","T","Y","U","I","O","P"],
+["A","S","D","F","G","H","J","K","L"],
+["Z","X","C","V","B","N","M"],
+[" "]
+];
+
 const keyboard=document.getElementById("keyboard");
 keyboardLayout.forEach(row=>{
   const r=document.createElement("div");
@@ -289,23 +305,33 @@ document.getElementById("pwEnter").onclick=()=>{
   if(pw.join("")===PASSWORD){
     passwordGate.classList.add("hidden");
     accessScreen.classList.remove("hidden");
-    const bootLines=["%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET","%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK","%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE","%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED","%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE","%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"];
+    const bootLines=[
+      "%CORE SIGNAL LOCKED","%MEMORY BANK ONLINE","%STACK POINTER SET",
+      "%THREAD 0x01 ACTIVE","%LOADING SECURITY LAYERS","%ENCRYPTION HANDSHAKE OK",
+      "%TIMEBASE SYNCHRONIZED","%NODE ADDRESS VERIFIED","%DATA BUS STABLE",
+      "%ARCHIVE INDEXING","%SEQUENCE VALIDATION","%CHECKSUM VERIFIED",
+      "%PIPELINE FLUSHED","%ACCESS ROUTE OPEN","%SIGNAL MONITOR ACTIVE",
+      "%BUFFER CLEAR","%CACHE REFRESH","%SYSTEM INIT COMPLETE"
+    ];
     let i=0;
     const interval=setInterval(()=>{
       gibberish.innerHTML+=bootLines[Math.floor(Math.random()*bootLines.length)]+"<br>";
       gibberish.scrollTop=gibberish.scrollHeight;
       i++;
-      if(i>150){ 
+      if(i>150){
         clearInterval(interval);
         accessScreen.classList.add("hidden");
         glyphGate.classList.remove("hidden");
       }
     },80);
-  }else{ pwWarn.textContent="INVALID INPUT"; pw=[]; pwDisplay.textContent=""; }
+  }else{
+    pwWarn.textContent="INVALID INPUT";
+    pw=[];pwDisplay.textContent="";
+  }
 };
 
 // CLOCK
-setInterval(()=>document.getElemen
+setInterval(()=>document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB"),1000);
 
 /* === FULL ORIGINAL GLYPH, NUMERIC TERMINAL, SECOND GLYPH GATE LOGIC === */
 
@@ -505,6 +531,3 @@ verify.onclick = () => {
 
 </body>
 </html>
-
-
-
